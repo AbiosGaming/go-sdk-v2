@@ -2,13 +2,14 @@ package abios
 
 import (
 	"net/url"
+	"sync/atomic"
 	"time"
 )
 
 // Default values for the outgoing rate and size of request buffer.
 const (
-	default_requests_per_second = 5
-	default_requests_per_minute = 300
+	default_requests_per_second int32 = 5
+	default_requests_per_minute int32 = 300
 
 	// Buffer one minutes worth of requests (this can not be changed at runtime)
 	default_request_buffer_size = default_requests_per_minute
@@ -55,8 +56,8 @@ type result struct {
 
 // requestHandler buffers requests and sends them out at a user-specified rate.
 type requestHandler struct {
-	requests_per_second int              // How many requests can be performed per second.
-	requests_per_minute int              // How many requests can be performed per minute.
+	requests_per_second int32            // How many requests can be performed per second.
+	requests_per_minute int32            // How many requests can be performed per minute.
 	queue               chan *request    // The queue of requests.
 	override            responseOverride // Do we need to override the expected responses?
 }
@@ -95,7 +96,7 @@ func newRequestHandler() *requestHandler {
 }
 
 // SetRate sets the outgoing rate according to the give parameters. 0 or less means do nothing.
-func (r *requestHandler) setRate(second, minute int) {
+func (r *requestHandler) setRate(second, minute int32) {
 	if 0 < second {
 		r.requests_per_second = second
 	}
@@ -113,8 +114,7 @@ func (r *requestHandler) setRate(second, minute int) {
 
 // dispatcher does requestHandler.Rate api-calls every requestHandler.ResetInterval
 func (r *requestHandler) dispatcher() {
-	var requests_this_second, requests_this_minute int
-	ok := make(chan int, default_request_buffer_size)
+	var requests_this_minute int32
 
 	ticker_second := time.NewTicker(time.Second)
 	ticker_minute := time.NewTicker(time.Minute)
@@ -127,38 +127,45 @@ func (r *requestHandler) dispatcher() {
 		case <-ticker_minute.C:
 			//if requests_today < r.requests_per_day // Also example
 			// Allow for more requests this minute if we still have requests left today
-			requests_this_minute = 0
+			atomic.AddInt32(&requests_this_minute, -requests_this_minute)
 		case <-ticker_second.C:
 			// Allow for more requests this second if we still have requests left this minute
 			if requests_this_minute < r.requests_per_minute {
 				go func() {
-					loop_counter := r.requests_per_minute - requests_this_minute // requests left this minute
+					number_to_send := r.requests_per_second
 
-					// If requests_per_second is smaller than requets left this minute, set loop counter
-					// to the smaller of the values
-					if r.requests_per_second < loop_counter {
-						loop_counter = r.requests_per_second
+					// If there are less requests left this minute than the specified rate per second
+					// then send the lesser amount.
+					left_this_minute := r.requests_per_minute - requests_this_minute // requests left this minute
+					if left_this_minute < number_to_send {
+						number_to_send = left_this_minute
 					}
 
-					for i := 0; i < loop_counter; i++ {
-						ok <- 1
+					// If there are less items in the queue than the current "number_to_send" then
+					// send the lesser amount.
+					if int32(len(r.queue)) < number_to_send {
+						number_to_send = int32(len(r.queue))
+					}
+
+					// Consider the requests sent
+					atomic.AddInt32(&requests_this_minute, number_to_send)
+					for i := int32(0); i < number_to_send; i++ {
+						// One go-routine per request
+						go func() {
+							currentRequest := <-r.queue
+							re := result{}
+
+							// Do we have to override the response?
+							if r.override.override {
+								currentRequest.ch <- r.override.data
+							} else {
+								re.statuscode, re.body = performRequest(currentRequest.url, currentRequest.params)
+								currentRequest.ch <- re
+							}
+						}()
 					}
 				}()
 			}
-		case <-ok:
-			currentRequest := <-r.queue
-			re := result{}
-
-			// Do we have to override the response?
-			if r.override.override {
-				currentRequest.ch <- r.override.data
-			} else {
-				re.statuscode, re.body = performRequest(currentRequest.url, currentRequest.params)
-				currentRequest.ch <- re
-			}
-
-			requests_this_second += 1
-			requests_this_minute += 1
 		}
 	}
 }

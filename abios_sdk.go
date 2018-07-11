@@ -108,7 +108,7 @@ func New(username, password string) *client {
 // per minte. A value less than or equal to 0 means previous
 // value is kept. Default values are (5, 300)
 func (a *client) SetRate(second, minute int) {
-	a.handler.setRate(second, minute)
+	a.handler.setRate(int32(second), int32(minute))
 }
 
 // authenticate queries the /oauth/access_token endpoint with the given credentials and
