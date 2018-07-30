@@ -157,6 +157,10 @@ concurrent use. You can easily pass this around to different go routines while s
 being sure that the token will be refreshed before expiration and that the specified rate
 will not be exceeded. See [Concurrent Use](#concurrent_example) for an example.
 
+The SDK will try to perform as many requests as possible concurrently. It will create one
+go-routine per request per second. For example, if the specified rate limit is 10 per
+second then every second up to 10 go-routines will be created, one for each request. 
+
 # Example Applications
 
 ## Usage
