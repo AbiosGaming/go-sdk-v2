@@ -9,16 +9,17 @@ type PlayerStructPaginated struct {
 
 // PlayerStruct represents a player that competes in Series' and Matches.
 type PlayerStruct struct {
-	Id          int64                 `json:"id,omitempty"`
-	FirstName   string                `json:"first_name"`
-	LastName    string                `json:"last_name"`
-	Nickname    string                `json:"nick_name,omitempty"`
-	DeletedAt   *string               `json:"deleted_at"`
-	Images      PlayerImagesStruct    `json:"images,omitempty"`
-	Country     *CountryStruct        `json:"country,omitempty"`
-	Race        *RaceStruct           `json:"race,omitempty"`
-	Team        *TeamStruct           `json:"team,omitempty"`
-	PlayerStats PlayerStatsStruct     `json:"player_stats,omitempty"`
-	Rosters     []DefaultRosterStruct `json:"rosters,omitempty"`
-	Game        GameStruct            `json:"game,omitempty"`
+	Id                  int64                      `json:"id,omitempty"`
+	FirstName           string                     `json:"first_name"`
+	LastName            string                     `json:"last_name"`
+	Nickname            string                     `json:"nick_name,omitempty"`
+	DeletedAt           *string                    `json:"deleted_at"`
+	Images              PlayerImagesStruct         `json:"images,omitempty"`
+	Country             *CountryStruct             `json:"country,omitempty"`
+	Race                *RaceStruct                `json:"race,omitempty"`
+	Team                *TeamStruct                `json:"team,omitempty"`
+	PlayerStats         PlayerStatsStruct          `json:"player_stats,omitempty"`
+	Rosters             []DefaultRosterStruct      `json:"rosters,omitempty"`
+	Game                GameStruct                 `json:"game,omitempty"`
+	SocialMediaAccounts []SocialMediaAccountStruct `json:"social_media_accounts,omitempty"`
 }
