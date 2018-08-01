@@ -24,6 +24,8 @@ const (
 	substages         = baseUrl + "substages/"
 	teams             = baseUrl + "teams"
 	teamsById         = teams + "/"
+	organisations     = baseUrl + "/organisations"
+	organisationsById = baseUrl + "/"
 	players           = baseUrl + "players"
 	playersById       = players + "/"
 	rosters           = baseUrl + "rosters/"
@@ -44,6 +46,8 @@ type AbiosSdk interface {
 	SubstagesById(id int, params Parameters) (SubstageStruct, *ErrorStruct)
 	Teams(params Parameters) (TeamStructPaginated, *ErrorStruct)
 	TeamsById(id int, params Parameters) (TeamStruct, *ErrorStruct)
+	Organisations(params Parameters) (OrganisationsStructPaginated, *ErrorStruct)
+	OrganisationsById(id int) (OrganisationStruct, *ErrorStruct)
 	Players(params Parameters) (PlayerStructPaginated, *ErrorStruct)
 	PlayersById(id int, params Parameters) (PlayerStruct, *ErrorStruct)
 	RostersById(id int, params Parameters) (RosterStruct, *ErrorStruct)
@@ -336,7 +340,7 @@ func (a *client) Teams(params Parameters) (TeamStructPaginated, *ErrorStruct) {
 	return TeamStructPaginated{}, &ErrorStruct{}
 }
 
-// TeamsById queues the /teams/:id endpoint and return a TeamStruct.
+// TeamsById queries the /teams/:id endpoint and return a TeamStruct.
 func (a *client) TeamsById(id int, params Parameters) (TeamStruct, *ErrorStruct) {
 	sId := strconv.Itoa(id)
 	if params == nil {
@@ -360,6 +364,58 @@ func (a *client) TeamsById(id int, params Parameters) (TeamStruct, *ErrorStruct)
 	}
 
 	return TeamStruct{}, &ErrorStruct{}
+}
+
+// Organisations queries the /organisations endpoint
+func (a *client) Organisations(params Parameters) (OrganisationsStructPaginated, *ErrorStruct) {
+	if params == nil {
+		params = make(Parameters)
+	} else {
+		params = copyParams(params)
+	}
+
+	params.Set("access_token", a.oauth.AccessToken)
+	result := <-a.handler.addRequest(teams, params)
+
+	dec := json.NewDecoder(bytes.NewBuffer(result.body))
+	if 200 <= result.statuscode && result.statuscode < 300 {
+		target := OrganisationsStructPaginated{}
+		dec.Decode(&target)
+		return target, nil
+	} else {
+		target := ErrorStruct{}
+		dec.Decode(&target)
+		return OrganisationsStructPaginated{}, &target
+	}
+
+	return OrganisationsStructPaginated{}, &ErrorStruct{}
+}
+
+// OrganisationsById queries the /organisations/:id endpoint
+func (a *client) OrganisationsById(id int) (OrganisationStruct, *ErrorStruct) {
+	sId := strconv.Itoa(id)
+	if params == nil {
+		params = make(Parameters)
+	} else {
+		params = copyParams(params)
+	}
+
+	params.Set("access_token", a.oauth.AccessToken)
+	result := <-a.handler.addRequest(teamsById+sId, params)
+
+	dec := json.NewDecoder(bytes.NewBuffer(result.body))
+	if 200 <= result.statuscode && result.statuscode < 300 {
+		target := OrganisationStruct{}
+		dec.Decode(&target)
+		return target, nil
+	} else {
+		target := ErrorStruct{}
+		dec.Decode(&target)
+		return OrganisationStruct{}, &target
+	}
+
+	return OrganisationStruct{}, &ErrorStruct{}
+
 }
 
 // Players queries the /players endpoint and returns PlayerStructPaginated.
