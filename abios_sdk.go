@@ -24,6 +24,8 @@ const (
 	substages         = baseUrl + "substages/"
 	teams             = baseUrl + "teams"
 	teamsById         = teams + "/"
+	organisations     = baseUrl + "organisations"
+	organisationsById = organisations + "/"
 	players           = baseUrl + "players"
 	playersById       = players + "/"
 	rosters           = baseUrl + "rosters/"
@@ -37,19 +39,21 @@ type AbiosSdk interface {
 	SetRate(second, minute int)
 	Games(params Parameters) (GameStructPaginated, *ErrorStruct)
 	Series(params Parameters) (SeriesStructPaginated, *ErrorStruct)
-	SeriesById(id int, params Parameters) (SeriesStruct, *ErrorStruct)
-	MatchesById(id int, params Parameters) (MatchStruct, *ErrorStruct)
+	SeriesById(id int64, params Parameters) (SeriesStruct, *ErrorStruct)
+	MatchesById(id int64, params Parameters) (MatchStruct, *ErrorStruct)
 	Tournaments(params Parameters) (TournamentStructPaginated, *ErrorStruct)
-	TournamentsById(id int, params Parameters) (TournamentStruct, *ErrorStruct)
-	SubstagesById(id int, params Parameters) (SubstageStruct, *ErrorStruct)
+	TournamentsById(id int64, params Parameters) (TournamentStruct, *ErrorStruct)
+	SubstagesById(id int64, params Parameters) (SubstageStruct, *ErrorStruct)
 	Teams(params Parameters) (TeamStructPaginated, *ErrorStruct)
-	TeamsById(id int, params Parameters) (TeamStruct, *ErrorStruct)
+	TeamsById(id int64, params Parameters) (TeamStruct, *ErrorStruct)
+	Organisations(params Parameters) (OrganisationStructPaginated, *ErrorStruct)
+	OrganisationsById(id int64) (OrganisationStruct, *ErrorStruct)
 	Players(params Parameters) (PlayerStructPaginated, *ErrorStruct)
-	PlayersById(id int, params Parameters) (PlayerStruct, *ErrorStruct)
-	RostersById(id int, params Parameters) (RosterStruct, *ErrorStruct)
+	PlayersById(id int64, params Parameters) (PlayerStruct, *ErrorStruct)
+	RostersById(id int64, params Parameters) (RosterStruct, *ErrorStruct)
 	Search(query string, params Parameters) ([]SearchResultStruct, *ErrorStruct)
 	Incidents(params Parameters) (IncidentStructPaginated, *ErrorStruct)
-	IncidentsBySeriesId(id int) (SeriesIncidentsStruct, *ErrorStruct)
+	IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, *ErrorStruct)
 }
 
 // client holds the oauth string returned from Authenticate as well as this sessions
@@ -183,8 +187,8 @@ func (a *client) Series(params Parameters) (SeriesStructPaginated, *ErrorStruct)
 }
 
 // SeriesById queries the /series/:id endpoint and returns a SeriesStruct.
-func (a *client) SeriesById(id int, params Parameters) (SeriesStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) SeriesById(id int64, params Parameters) (SeriesStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -209,8 +213,8 @@ func (a *client) SeriesById(id int, params Parameters) (SeriesStruct, *ErrorStru
 }
 
 // MatchesById queries the /matches/:id endpoint and returns a MatchStruct.
-func (a *client) MatchesById(id int, params Parameters) (MatchStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) MatchesById(id int64, params Parameters) (MatchStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -260,8 +264,8 @@ func (a *client) Tournaments(params Parameters) (TournamentStructPaginated, *Err
 }
 
 // TournamentsById queries the /tournaments/:id endpoint and return a TournamentStruct.
-func (a *client) TournamentsById(id int, params Parameters) (TournamentStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) TournamentsById(id int64, params Parameters) (TournamentStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -286,8 +290,8 @@ func (a *client) TournamentsById(id int, params Parameters) (TournamentStruct, *
 }
 
 // SubstagesById queries the /substages/:id endpoint and returns a SubstageStruct.
-func (a *client) SubstagesById(id int, params Parameters) (SubstageStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) SubstagesById(id int64, params Parameters) (SubstageStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -336,9 +340,9 @@ func (a *client) Teams(params Parameters) (TeamStructPaginated, *ErrorStruct) {
 	return TeamStructPaginated{}, &ErrorStruct{}
 }
 
-// TeamsById queues the /teams/:id endpoint and return a TeamStruct.
-func (a *client) TeamsById(id int, params Parameters) (TeamStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+// TeamsById queries the /teams/:id endpoint and return a TeamStruct.
+func (a *client) TeamsById(id int64, params Parameters) (TeamStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -360,6 +364,54 @@ func (a *client) TeamsById(id int, params Parameters) (TeamStruct, *ErrorStruct)
 	}
 
 	return TeamStruct{}, &ErrorStruct{}
+}
+
+// Organisations queries the /organisations endpoint
+func (a *client) Organisations(params Parameters) (OrganisationStructPaginated, *ErrorStruct) {
+	if params == nil {
+		params = make(Parameters)
+	} else {
+		params = copyParams(params)
+	}
+
+	params.Set("access_token", a.oauth.AccessToken)
+	result := <-a.handler.addRequest(organisations, params)
+
+	dec := json.NewDecoder(bytes.NewBuffer(result.body))
+	if 200 <= result.statuscode && result.statuscode < 300 {
+		target := OrganisationStructPaginated{}
+		dec.Decode(&target)
+		return target, nil
+	} else {
+		target := ErrorStruct{}
+		dec.Decode(&target)
+		return OrganisationStructPaginated{}, &target
+	}
+
+	return OrganisationStructPaginated{}, &ErrorStruct{}
+}
+
+// OrganisationsById queries the /organisations/:id endpoint
+func (a *client) OrganisationsById(id int64) (OrganisationStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
+	params := make(Parameters)
+
+	params.Set("access_token", a.oauth.AccessToken)
+	result := <-a.handler.addRequest(organisationsById+sId, params)
+
+	dec := json.NewDecoder(bytes.NewBuffer(result.body))
+	if 200 <= result.statuscode && result.statuscode < 300 {
+		target := OrganisationStruct{}
+		dec.Decode(&target)
+		return target, nil
+	} else {
+		target := ErrorStruct{}
+		dec.Decode(&target)
+		return OrganisationStruct{}, &target
+	}
+
+	return OrganisationStruct{}, &ErrorStruct{}
+
 }
 
 // Players queries the /players endpoint and returns PlayerStructPaginated.
@@ -388,8 +440,8 @@ func (a *client) Players(params Parameters) (PlayerStructPaginated, *ErrorStruct
 }
 
 // PlayersById queries the /players/:id endpoint and returns a PlayerStruct.
-func (a *client) PlayersById(id int, params Parameters) (PlayerStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) PlayersById(id int64, params Parameters) (PlayerStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -414,8 +466,8 @@ func (a *client) PlayersById(id int, params Parameters) (PlayerStruct, *ErrorStr
 }
 
 // RostersById queries the /rosters/:id endpoint and returns a RosterStruct.
-func (a *client) RostersById(id int, params Parameters) (RosterStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) RostersById(id int64, params Parameters) (RosterStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -493,8 +545,8 @@ func (a *client) Incidents(params Parameters) (IncidentStructPaginated, *ErrorSt
 
 // IncidentBySeriesId queries the /incidents/:series_id endpoint and returns a
 // SeriesIncidentsStruct.
-func (a *client) IncidentsBySeriesId(id int) (SeriesIncidentsStruct, *ErrorStruct) {
-	sId := strconv.Itoa(id)
+func (a *client) IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, *ErrorStruct) {
+	sId := strconv.FormatInt(id, 10)
 	params := make(Parameters)
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(incidentsBySeries+sId, params)
