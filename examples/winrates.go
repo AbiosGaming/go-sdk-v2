@@ -33,7 +33,7 @@ func main() {
 					fmt.Println(err)
 					continue
 				}
-				seriesWinrate := teamWithStats.Stats.Winrate.Series
+				seriesWinrate := teamWithStats.TeamStats.Winrate.Series
 				fmt.Printf("%v has a winrate of %.2f%% over %v series in %v and their latest match started %v\n",
 					teamWithStats.Name,
 					seriesWinrate.Rate*100,
