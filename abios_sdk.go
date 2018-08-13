@@ -36,7 +36,7 @@ const (
 
 // AbiosSdk defines the interface of an implementation of a SDK targeting the Abios endpoints.
 type AbiosSdk interface {
-	SetRate(second, minute int)
+	SetRate(second, minute uint)
 	Games(params Parameters) (GameStructPaginated, *ErrorStruct)
 	Series(params Parameters) (SeriesStructPaginated, *ErrorStruct)
 	SeriesById(id int64, params Parameters) (SeriesStruct, *ErrorStruct)
