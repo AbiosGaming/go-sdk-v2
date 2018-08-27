@@ -13,7 +13,6 @@ import (
 // Constant variables that represents endpoints
 const (
 	baseUrl           = "https://api.abiosgaming.com/v2/"
-	errorEndpoint     = baseUrl + "error"
 	access_token      = baseUrl + "oauth/access_token"
 	games             = baseUrl + "games"
 	series            = baseUrl + "series"
