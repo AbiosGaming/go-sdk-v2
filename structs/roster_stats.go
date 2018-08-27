@@ -20,7 +20,7 @@ type RosterStatsStruct struct {
 	} `json:"nemesis"`
 	Dominating *struct {
 		Match struct {
-			Roster RosterStruct `json:"roster`
+			Roster RosterStruct `json:"roster"`
 			Wins   int64        `json:"wins"`
 		} `json:"match,omitempty"`
 	} `json:"dominating"`
