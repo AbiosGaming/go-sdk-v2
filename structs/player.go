@@ -4,7 +4,7 @@ package structs
 type PlayerStructPaginated struct {
 	LastPage    int64          `json:"last_page,omitempty"`
 	CurrentPage int64          `json:"current_page,omitempty"`
-	Data        []PlayerStruct `json"data,omitempty"`
+	Data        []PlayerStruct `json:"data,omitempty"`
 }
 
 // PlayerStruct represents a player that competes in Series' and Matches.

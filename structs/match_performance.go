@@ -17,7 +17,7 @@ type MatchWinrateStruct struct {
 // MatchWinrateOverallStruct holds information about the summarized performance statistics.
 type MatchWinrateOverallStruct struct {
 	History int64              `json:"history,omitempty"`
-	Rosters map[string]float64 `json"-"`
+	Rosters map[string]float64 `json:"-"`
 }
 
 type _MatchWinrateOverallStruct MatchWinrateOverallStruct

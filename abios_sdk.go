@@ -13,7 +13,6 @@ import (
 // Constant variables that represents endpoints
 const (
 	baseUrl           = "https://api.abiosgaming.com/v2/"
-	errorEndpoint     = baseUrl + "error"
 	access_token      = baseUrl + "oauth/access_token"
 	games             = baseUrl + "games"
 	series            = baseUrl + "series"
@@ -87,11 +86,11 @@ func (a *client) authenticator() {
 			err = a.authenticate()
 			if err == nil {
 				a.handler.override = responseOverride{override: false, data: result{}}
-				break
+				return
 			}
 		case <-fail.C:
 			a.handler.override = responseOverride{override: true, data: *err}
-			break
+			return
 		}
 	}
 }
@@ -130,11 +129,9 @@ func (a *client) authenticate() *result {
 		dec.Decode(&target)
 		a.oauth = target
 		return nil
-	} else {
-		return &result{statuscode: statusCode, body: b}
 	}
 
-	return nil
+	return &result{statuscode: statusCode, body: b}
 }
 
 // Games queries the /games endpoint and returns a GameStructPaginated.
@@ -152,13 +149,11 @@ func (a *client) Games(params Parameters) (GameStructPaginated, *ErrorStruct) {
 		target := GameStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(target)
-		return GameStructPaginated{}, &target
 	}
 
-	return GameStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return GameStructPaginated{}, &target
 }
 
 // Series queries the /series endpoint and returns a SeriesStructPaginated.
@@ -177,13 +172,11 @@ func (a *client) Series(params Parameters) (SeriesStructPaginated, *ErrorStruct)
 		target := SeriesStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return SeriesStructPaginated{}, &target
 	}
 
-	return SeriesStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return SeriesStructPaginated{}, &target
 }
 
 // SeriesById queries the /series/:id endpoint and returns a SeriesStruct.
@@ -203,13 +196,11 @@ func (a *client) SeriesById(id int64, params Parameters) (SeriesStruct, *ErrorSt
 		target := SeriesStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return SeriesStruct{}, &target
 	}
 
-	return SeriesStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return SeriesStruct{}, &target
 }
 
 // MatchesById queries the /matches/:id endpoint and returns a MatchStruct.
@@ -229,13 +220,11 @@ func (a *client) MatchesById(id int64, params Parameters) (MatchStruct, *ErrorSt
 		target := MatchStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return MatchStruct{}, &target
 	}
 
-	return MatchStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return MatchStruct{}, &target
 }
 
 // Tournaments queries the /tournaments endpoint and returns a list of TournamentStructPaginated.
@@ -254,13 +243,11 @@ func (a *client) Tournaments(params Parameters) (TournamentStructPaginated, *Err
 		target := TournamentStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return TournamentStructPaginated{}, &target
 	}
 
-	return TournamentStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return TournamentStructPaginated{}, &target
 }
 
 // TournamentsById queries the /tournaments/:id endpoint and return a TournamentStruct.
@@ -280,13 +267,11 @@ func (a *client) TournamentsById(id int64, params Parameters) (TournamentStruct,
 		target := TournamentStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return TournamentStruct{}, &target
 	}
 
-	return TournamentStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return TournamentStruct{}, &target
 }
 
 // SubstagesById queries the /substages/:id endpoint and returns a SubstageStruct.
@@ -306,13 +291,11 @@ func (a *client) SubstagesById(id int64, params Parameters) (SubstageStruct, *Er
 		target := SubstageStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return SubstageStruct{}, &target
 	}
 
-	return SubstageStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return SubstageStruct{}, &target
 }
 
 // Teams queries the /teams endpoint and returns a TeamsStructPaginated.
@@ -331,13 +314,11 @@ func (a *client) Teams(params Parameters) (TeamStructPaginated, *ErrorStruct) {
 		target := TeamStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return TeamStructPaginated{}, &target
 	}
 
-	return TeamStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return TeamStructPaginated{}, &target
 }
 
 // TeamsById queries the /teams/:id endpoint and return a TeamStruct.
@@ -357,13 +338,11 @@ func (a *client) TeamsById(id int64, params Parameters) (TeamStruct, *ErrorStruc
 		target := TeamStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return TeamStruct{}, &target
 	}
 
-	return TeamStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return TeamStruct{}, &target
 }
 
 // Organisations queries the /organisations endpoint
@@ -382,13 +361,11 @@ func (a *client) Organisations(params Parameters) (OrganisationStructPaginated, 
 		target := OrganisationStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return OrganisationStructPaginated{}, &target
 	}
 
-	return OrganisationStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return OrganisationStructPaginated{}, &target
 }
 
 // OrganisationsById queries the /organisations/:id endpoint
@@ -404,14 +381,11 @@ func (a *client) OrganisationsById(id int64) (OrganisationStruct, *ErrorStruct) 
 		target := OrganisationStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return OrganisationStruct{}, &target
 	}
 
-	return OrganisationStruct{}, &ErrorStruct{}
-
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return OrganisationStruct{}, &target
 }
 
 // Players queries the /players endpoint and returns PlayerStructPaginated.
@@ -430,13 +404,11 @@ func (a *client) Players(params Parameters) (PlayerStructPaginated, *ErrorStruct
 		target := PlayerStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return PlayerStructPaginated{}, &target
 	}
 
-	return PlayerStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return PlayerStructPaginated{}, &target
 }
 
 // PlayersById queries the /players/:id endpoint and returns a PlayerStruct.
@@ -456,13 +428,11 @@ func (a *client) PlayersById(id int64, params Parameters) (PlayerStruct, *ErrorS
 		target := PlayerStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return PlayerStruct{}, &target
 	}
 
-	return PlayerStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return PlayerStruct{}, &target
 }
 
 // RostersById queries the /rosters/:id endpoint and returns a RosterStruct.
@@ -482,13 +452,11 @@ func (a *client) RostersById(id int64, params Parameters) (RosterStruct, *ErrorS
 		target := RosterStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return RosterStruct{}, &target
 	}
 
-	return RosterStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return RosterStruct{}, &target
 }
 
 // Search queries the /search endpoint with the given query and returns a list of
@@ -509,13 +477,11 @@ func (a *client) Search(query string, params Parameters) ([]SearchResultStruct, 
 		target := []SearchResultStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return []SearchResultStruct{}, &target
 	}
 
-	return []SearchResultStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return []SearchResultStruct{}, &target
 }
 
 // Incidents queries the /incidents endpoint and returns an IncidentStructPaginated.
@@ -534,13 +500,11 @@ func (a *client) Incidents(params Parameters) (IncidentStructPaginated, *ErrorSt
 		target := IncidentStructPaginated{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return IncidentStructPaginated{}, &target
 	}
 
-	return IncidentStructPaginated{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return IncidentStructPaginated{}, &target
 }
 
 // IncidentBySeriesId queries the /incidents/:series_id endpoint and returns a
@@ -556,13 +520,11 @@ func (a *client) IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, *ErrorStr
 		target := SeriesIncidentsStruct{}
 		dec.Decode(&target)
 		return target, nil
-	} else {
-		target := ErrorStruct{}
-		dec.Decode(&target)
-		return SeriesIncidentsStruct{}, &target
 	}
 
-	return SeriesIncidentsStruct{}, &ErrorStruct{}
+	target := ErrorStruct{}
+	dec.Decode(&target)
+	return SeriesIncidentsStruct{}, &target
 }
 
 // copyParams copies the parameters to a new map so different routines don't share a
