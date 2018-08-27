@@ -153,7 +153,7 @@ func (a *client) Games(params Parameters) (GameStructPaginated, *ErrorStruct) {
 		return target, nil
 	} else {
 		target := ErrorStruct{}
-		dec.Decode(target)
+		dec.Decode(&target)
 		return GameStructPaginated{}, &target
 	}
 
