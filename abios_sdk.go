@@ -87,11 +87,11 @@ func (a *client) authenticator() {
 			err = a.authenticate()
 			if err == nil {
 				a.handler.override = responseOverride{override: false, data: result{}}
-				break
+				return
 			}
 		case <-fail.C:
 			a.handler.override = responseOverride{override: true, data: *err}
-			break
+			return
 		}
 	}
 }

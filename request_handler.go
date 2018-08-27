@@ -171,6 +171,7 @@ func (r *requestHandler) dispatcher() {
 
 					// Send the requests in a non-blocking way, so in case the queue is empty we break
 					// the loop. I.e never create more routines than what is in the queue
+				RequestLoop:
 					for i := uint(0); i < number_to_send; i++ {
 						select {
 						case req := <-r.queue:
@@ -190,7 +191,7 @@ func (r *requestHandler) dispatcher() {
 						default:
 							// The default case is when there are no more requests in the channel, in
 							// which case we break the loop
-							break
+							break RequestLoop
 						}
 					}
 				}()
