@@ -22,6 +22,7 @@ type TournamentStruct struct {
 	End              *string                `json:"end"`        // Datettime
 	DeletedAt        *string                `json:"deleted_at"` // Datettime
 	Url              string                 `json:"url,omitempty"`
+	HasPbpStats      bool                   `json:"has_pbpstats"`
 	Images           TournamentImagesStruct `json:"images,omitempty"`
 	PrizepoolString  PrizepoolStruct        `json:"prizepool_string,omitempty"`
 	Links            LinksStruct            `json:"links,omitempty"`
