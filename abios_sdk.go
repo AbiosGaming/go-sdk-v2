@@ -13,23 +13,23 @@ import (
 // Constant variables that represents endpoints
 const (
 	baseUrl           = "https://api.abiosgaming.com/v2/"
-	access_token      = baseUrl + "oauth/access_token"
-	games             = baseUrl + "games"
-	series            = baseUrl + "series"
+	access_token      = "oauth/access_token"
+	games             = "games"
+	series            = "series"
 	seriesById        = series + "/"
-	matches           = baseUrl + "matches/"
-	tournaments       = baseUrl + "tournaments"
+	matches           = "matches/"
+	tournaments       = "tournaments"
 	tournamentsById   = tournaments + "/"
-	substages         = baseUrl + "substages/"
-	teams             = baseUrl + "teams"
+	substages         = "substages/"
+	teams             = "teams"
 	teamsById         = teams + "/"
-	organisations     = baseUrl + "organisations"
+	organisations     = "organisations"
 	organisationsById = organisations + "/"
-	players           = baseUrl + "players"
+	players           = "players"
 	playersById       = players + "/"
-	rosters           = baseUrl + "rosters/"
-	search            = baseUrl + "search"
-	incidents         = baseUrl + "incidents"
+	rosters           = "rosters/"
+	search            = "search"
+	incidents         = "incidents"
 	incidentsBySeries = incidents + "/"
 )
 
@@ -62,6 +62,7 @@ type client struct {
 	password string
 	oauth    AccessTokenStruct
 	handler  *requestHandler
+	base_url string
 }
 
 // authenticator makes sure the oauth token doesn't expire.
@@ -97,8 +98,13 @@ func (a *client) authenticator() {
 
 // NewAbios returns a new endpoint-wrapper for api version 2 with given credentials.
 func New(username, password string) *client {
+	return NewWithUrl(username, password, baseUrl)
+}
+
+// NewAbios returns a new endpoint-wrapper for api version 2 with given credentials and baseUrl.
+func NewWithUrl(username, password, base_url string) *client {
 	r := newRequestHandler()
-	c := &client{username, password, AccessTokenStruct{}, r}
+	c := &client{username, password, AccessTokenStruct{}, r, base_url}
 	err := c.authenticate()
 	if err != nil {
 		c.handler.override = responseOverride{override: true, data: *err}
@@ -119,7 +125,7 @@ func (a *client) SetRate(second, minute uint) {
 func (a *client) authenticate() *result {
 	var payload = []byte(`grant_type=client_credentials&client_id=` + a.username + `&client_secret=` + a.password)
 
-	req, _ := http.NewRequest("POST", access_token, bytes.NewBuffer(payload))
+	req, _ := http.NewRequest("POST", a.base_url+access_token, bytes.NewBuffer(payload))
 	req.Header = http.Header{"Content-Type": {"application/x-www-form-urlencoded"}}
 
 	statusCode, b := apiCall(req)
@@ -142,7 +148,7 @@ func (a *client) Games(params Parameters) (GameStructPaginated, *ErrorStruct) {
 		params = copyParams(params)
 	}
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(games, params)
+	result := <-a.handler.addRequest(a.base_url+games, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -165,7 +171,7 @@ func (a *client) Series(params Parameters) (SeriesStructPaginated, *ErrorStruct)
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(series, params)
+	result := <-a.handler.addRequest(a.base_url+series, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -189,7 +195,7 @@ func (a *client) SeriesById(id int64, params Parameters) (SeriesStruct, *ErrorSt
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(seriesById+sId, params)
+	result := <-a.handler.addRequest(a.base_url+seriesById+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -213,7 +219,7 @@ func (a *client) MatchesById(id int64, params Parameters) (MatchStruct, *ErrorSt
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(matches+sId, params)
+	result := <-a.handler.addRequest(a.base_url+matches+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -236,7 +242,7 @@ func (a *client) Tournaments(params Parameters) (TournamentStructPaginated, *Err
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(tournaments, params)
+	result := <-a.handler.addRequest(a.base_url+tournaments, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -260,7 +266,7 @@ func (a *client) TournamentsById(id int64, params Parameters) (TournamentStruct,
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(tournamentsById+sId, params)
+	result := <-a.handler.addRequest(a.base_url+tournamentsById+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -284,7 +290,7 @@ func (a *client) SubstagesById(id int64, params Parameters) (SubstageStruct, *Er
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(substages+sId, params)
+	result := <-a.handler.addRequest(a.base_url+substages+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -307,7 +313,7 @@ func (a *client) Teams(params Parameters) (TeamStructPaginated, *ErrorStruct) {
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(teams, params)
+	result := <-a.handler.addRequest(a.base_url+teams, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -331,7 +337,7 @@ func (a *client) TeamsById(id int64, params Parameters) (TeamStruct, *ErrorStruc
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(teamsById+sId, params)
+	result := <-a.handler.addRequest(a.base_url+teamsById+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -354,7 +360,7 @@ func (a *client) Organisations(params Parameters) (OrganisationStructPaginated, 
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(organisations, params)
+	result := <-a.handler.addRequest(a.base_url+organisations, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -374,7 +380,7 @@ func (a *client) OrganisationsById(id int64) (OrganisationStruct, *ErrorStruct) 
 	params := make(Parameters)
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(organisationsById+sId, params)
+	result := <-a.handler.addRequest(a.base_url+organisationsById+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -397,7 +403,7 @@ func (a *client) Players(params Parameters) (PlayerStructPaginated, *ErrorStruct
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(players, params)
+	result := <-a.handler.addRequest(a.base_url+players, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -421,7 +427,7 @@ func (a *client) PlayersById(id int64, params Parameters) (PlayerStruct, *ErrorS
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(playersById+sId, params)
+	result := <-a.handler.addRequest(a.base_url+playersById+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -445,7 +451,7 @@ func (a *client) RostersById(id int64, params Parameters) (RosterStruct, *ErrorS
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(rosters+sId, params)
+	result := <-a.handler.addRequest(a.base_url+rosters+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -470,7 +476,7 @@ func (a *client) Search(query string, params Parameters) ([]SearchResultStruct, 
 
 	params.Set("access_token", a.oauth.AccessToken)
 	params.Add("q", query)
-	result := <-a.handler.addRequest(search, params)
+	result := <-a.handler.addRequest(a.base_url+search, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -493,7 +499,7 @@ func (a *client) Incidents(params Parameters) (IncidentStructPaginated, *ErrorSt
 	}
 
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(incidents, params)
+	result := <-a.handler.addRequest(a.base_url+incidents, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
@@ -513,7 +519,7 @@ func (a *client) IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, *ErrorStr
 	sId := strconv.FormatInt(id, 10)
 	params := make(Parameters)
 	params.Set("access_token", a.oauth.AccessToken)
-	result := <-a.handler.addRequest(incidentsBySeries+sId, params)
+	result := <-a.handler.addRequest(a.base_url+incidentsBySeries+sId, params)
 
 	dec := json.NewDecoder(bytes.NewBuffer(result.body))
 	if 200 <= result.statuscode && result.statuscode < 300 {
