@@ -16,6 +16,7 @@ type PlayerStruct struct {
 	DeletedAt           *string                    `json:"deleted_at"`
 	Images              PlayerImagesStruct         `json:"images,omitempty"`
 	Country             *CountryStruct             `json:"country,omitempty"`
+	Roles               []RoleStruct               `json:"roles"`
 	Race                *RaceStruct                `json:"race,omitempty"`
 	Team                *TeamStruct                `json:"team,omitempty"`
 	PlayerStats         PlayerStatsStruct          `json:"player_stats,omitempty"`
