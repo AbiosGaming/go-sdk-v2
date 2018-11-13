@@ -1,9 +1,13 @@
 package structs
 
+import (
+	"encoding/json"
+)
+
 // PlayerStatsStruct hold performance statistics about a particular Player.
 type PlayerStatsStruct struct {
-	SinglePlayer *SinglePlayerStatsStruct     `json:"single_player,omitempty"` // Null when player does not play single player game. Otherwise format is equal to stats for a team
-	PlayByPlay   *PlayerPlayByPlayStatsStruct `json:"play_by_play"`
+	SinglePlayer *SinglePlayerStatsStruct    `json:"single_player,omitempty"` // Null when player does not play single player game. Otherwise format is equal to stats for a team
+	PlayByPlay   PlayerPlayByPlayStatsStruct `json:"play_by_play"`
 }
 
 // SinglePlayerStatsStruct hold information for players playing single-player games.
@@ -48,14 +52,56 @@ type SinglePlayerStatsStruct struct {
 }
 
 // PlayByPlayStatsStruct holds information about play by play statistics for a certain player.
-type PlayerPlayByPlayStatsStruct struct {
-	CsPlayerPlayByPlayStatsStruct
-	DotaPlayerPlayByPlayStatsStruct
-	LolPlayerPlayByPlayStatsStruct
+type PlayerPlayByPlayStatsStruct interface{}
+
+type playerPlayByPlayStatsStruct PlayerPlayByPlayStatsStruct
+
+func (p *PlayerStatsStruct) UnmarshalJSON(data []byte) error {
+	var partial map[string]json.RawMessage
+	if err := json.Unmarshal(data, &partial); err != nil {
+		return err
+	}
+
+	var single_player SinglePlayerStatsStruct
+	if err := json.Unmarshal(partial["single_player"], &single_player); err != nil {
+		return err
+	}
+	p.SinglePlayer = &single_player
+
+	var pbp_map map[string]json.RawMessage
+	if err := json.Unmarshal(partial["play_by_play"], &pbp_map); err != nil {
+		return err
+	}
+
+	if _, ok := pbp_map["faction_stats"]; ok {
+		var tmp DotaPlayerStats
+		if err := json.Unmarshal(partial["play_by_play"], &tmp); err != nil {
+			return err
+		}
+		p.PlayByPlay = tmp
+	}
+
+	if _, ok := pbp_map["side_stats"]; ok {
+		var tmp LolPlayerStats
+		if err := json.Unmarshal(partial["play_by_play"], &tmp); err != nil {
+			return err
+		}
+		p.PlayByPlay = tmp
+	}
+
+	if _, ok := pbp_map["over_all"]; ok {
+		var tmp CsPlayerStats
+		if err := json.Unmarshal(partial["play_by_play"], &tmp); err != nil {
+			return err
+		}
+		p.PlayByPlay = tmp
+	}
+
+	return nil
 }
 
 // CsPlayerByPlayStatsStruct holds play by play stats for cs players
-type CsPlayerPlayByPlayStatsStruct struct {
+type CsPlayerStats struct {
 	Overall struct {
 		CsPlayerPerformanceStruct
 		Plants  float64 `json:"plants"`
@@ -102,7 +148,7 @@ type CsPlayerPerformanceStruct struct {
 }
 
 // DotaPlayerByPlayStatsStruct holds play by play stats for dota players
-type DotaPlayerPlayByPlayStatsStruct struct {
+type DotaPlayerStats struct {
 	Stats     DotaPlayerPerformanceStruct `json:"stats"`
 	HeroStats struct {
 		Attribute struct {
@@ -141,7 +187,7 @@ type DotaPlayerPerformanceStruct struct {
 	AvgXpm         float64 `json:"avg_xpm"`
 }
 
-type LolPlayerPlayByPlayStatsStruct struct {
+type LolPlayerStats struct {
 	NrMatches int64 `json:"nr_matches"`
 	NrWins    int64 `json:"nr_wins"`
 	AvgStats  struct {
@@ -171,7 +217,7 @@ type LolPlayerPlayByPlayStatsStruct struct {
 		LargestKillingSpree int64 `json:"largest_killing_spree"`
 		LargestMultiKill    int64 `json:"largest_multi_kill"`
 		KillingSprees       int64 `json:"killing_sprees"`
-	} `json:"largest_combo"`
+	} `json:"largest_combos"`
 	MostPlayedChampion []struct {
 		Champion struct {
 			Name string `json:"name"`
@@ -183,7 +229,7 @@ type LolPlayerPlayByPlayStatsStruct struct {
 		AvgAssists float64 `json:"avg_assists"`
 		AvgGpm     float64 `json:"avg_gpm"`
 		AvgXpm     float64 `json:"avg_xpm"`
-	} `json:"most_played_champion"`
+	} `json:"most_played_champions"`
 	SideStats struct {
 		Purple struct {
 			NrMatches int64 `json:"nr_matches"`
