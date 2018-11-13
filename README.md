@@ -1,7 +1,7 @@
 Abios SDK
 =========
 
-Abios SDK is meant to provide a thin wrapper around http requests and and unmarshal
+Abios SDK is meant to provide a thin wrapper around http requests and unmarshal
 the resulting JSON into an appropriate struct. You can think of the SDK as a collection
 of structs (each of which corresponds to an Abios endpoint) combined with methods that
 unmarshals and type checks.
