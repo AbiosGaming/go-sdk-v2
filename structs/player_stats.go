@@ -88,11 +88,13 @@ type CsPlayerPlayByPlayStatsStruct struct {
 // CsPlayerPerformanceStruct holds some general data about a players performance. This
 // struct is re-used for different levels data (e.g per_map and over_all).
 type CsPlayerPerformanceStruct struct {
-	Kills    float64 `json:"kills"`
-	Assists  float64 `json:"assists"`
-	Deaths   float64 `json:"deaths"`
-	History  int64   `json:"history"`
-	Accuracy struct {
+	Kills       float64 `json:"kills"`
+	Assists     float64 `json:"assists"`
+	Deaths      float64 `json:"deaths"`
+	DamageGiven float64 `json:"dmg_given"`
+	DamageTaken float64 `json:"dmg_taken"`
+	History     int64   `json:"history"`
+	Accuracy    struct {
 		General  float64 `json:"general"`
 		Headshot float64 `json:"head_shot"`
 	} `json:"accuracy"`

@@ -8,9 +8,10 @@ type MatchSummaryStruct struct {
 
 // CsMatchSummaryStruct is the summarization of a CS:GO match.
 type CsMatchSummaryStruct struct {
-	Home       int64 `json:"home"`
-	Away       int64 `json:"away"`
-	ScoreBoard struct {
+	Home        int64 `json:"home"`
+	Away        int64 `json:"away"`
+	MatchLength int64 `json:"match_length"`
+	ScoreBoard  struct {
 		Home []CsScoreBoardEntry `json:"home"`
 		Away []CsScoreBoardEntry `json:"away"`
 	} `json:"scoreboard"`
