@@ -91,10 +91,9 @@ type DotaMatchSummaryStruct struct {
 		Hero     HeroStruct `json:"hero"`
 	} `json:"draft_seq"`
 	FirstBlood struct {
-		Killer  int64   `json:"killer"`
-		Victim  int64   `json:"victim"`
-		AtTime  int64   `json:"at_time"`
-		Assists []int64 `json:"assists"`
+		Killer int64 `json:"killer"`
+		Victim int64 `json:"victim"`
+		AtTime int64 `json:"at_time"`
 	} `json:"first_blood"`
 	Kills []struct {
 		Killer  int64   `json:"killer"`
@@ -122,13 +121,46 @@ type DotaMatchSummaryStruct struct {
 		HeroDmg     struct {
 			Given struct {
 				ByHero DotaDmg `json:"by_hero"`
-				ByMob  DotaDmg `json:"by_mob"`
+				ByMobs DotaDmg `json:"by_mobs"`
 			} `json:"given"`
 			Taken struct {
 				FromHeroes DotaDmg `json:"from_heroes"`
 				FromMobs   DotaDmg `json:"from_mobs"`
 			} `json:"taken"`
 		} `json:"hero_dmg"`
+		HeroHealing struct {
+			Given struct {
+				ByHero int64 `json:"by_hero"`
+				ByMobs int64 `json:"by_mobs"`
+			} `json:"given"`
+			Taken struct {
+				FromHeroes int64 `json:"from_heroes"`
+				FromMobs   int64 `json:"from_mobs"`
+			} `json:"taken"`
+		} `json:"hero_healing"`
+		Items struct {
+			Inventory struct {
+				Slot1 DotaItemStruct `json:"slot_1"`
+				Slot2 DotaItemStruct `json:"slot_2"`
+				Slot3 DotaItemStruct `json:"slot_3"`
+				Slot4 DotaItemStruct `json:"slot_4"`
+				Slot5 DotaItemStruct `json:"slot_5"`
+				Slot6 DotaItemStruct `json:"slot_6"`
+			} `json:"inventory"`
+			Backpack struct {
+				Slot1 DotaItemStruct `json:"slot_1"`
+				Slot2 DotaItemStruct `json:"slot_2"`
+				Slot3 DotaItemStruct `json:"slot_3"`
+			} `json:"backback"`
+			Stash struct {
+				Slot1 DotaItemStruct `json:"slot_1"`
+				Slot2 DotaItemStruct `json:"slot_2"`
+				Slot3 DotaItemStruct `json:"slot_3"`
+				Slot4 DotaItemStruct `json:"slot_4"`
+				Slot5 DotaItemStruct `json:"slot_5"`
+				Slot6 DotaItemStruct `json:"slot_6"`
+			} `json:"stash"`
+		} `json:"items"`
 	} `json:"player_stats"`
 	RoshanEvents []struct {
 		Type   string `json:"type"`
