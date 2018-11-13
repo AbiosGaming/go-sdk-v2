@@ -46,6 +46,7 @@ type TeamStatsStruct struct {
 type TeamPlayByPlayStatsStruct struct {
 	CsTeamPlayByPlayStatsStruct
 	DotaTeamPlayByPlayStatsStruct
+	LolTeamPlayByPlayStatsStruct
 	SharedTeamPlayByPlayStatsStruct
 }
 
@@ -57,7 +58,7 @@ type SharedTeamPlayByPlayStatsStruct struct {
 
 // SharedTopStatsStruct holds all information that can be present in the top_stats key.
 type SharedTopStatsStruct struct {
-	// CS & Dota
+	// CS & Dota & Lol
 	Kills struct {
 		DotaPlayerAgainstStruct       // DotaPlayerAgainst extends PlayerAgainst (which is all that is needed for CS)
 		Kills                   int64 `json:"kills"`
@@ -81,7 +82,7 @@ type SharedTopStatsStruct struct {
 		Defuses int64 `json:"defuses"`
 	} `json:"defuses"`
 
-	// Dota
+	// Dota & Lol
 	Gpm struct {
 		DotaPlayerAgainstStruct
 		Gpm float64 `json:"gpm"`
@@ -90,6 +91,8 @@ type SharedTopStatsStruct struct {
 		DotaPlayerAgainstStruct
 		Xpm float64 `json:"xpm"`
 	} `json:"xpm"`
+
+	// Dota
 	DmgGiven struct {
 		DotaPlayerAgainstStruct
 		DmgGiven float64 `json:"dmg_given"`
@@ -102,6 +105,15 @@ type SharedTopStatsStruct struct {
 		DotaPlayerAgainstStruct
 		Denies int64 `json:"denies"`
 	} `json:"creep_denies"`
+
+	// Lol
+	DoubleKills         *LolPlayerAgainstStruct `json:"double_kills"`
+	TripleKills         *LolPlayerAgainstStruct `json:"triple_kills"`
+	QuadraKills         *LolPlayerAgainstStruct `json:"quadra_kills"`
+	PentaKills          *LolPlayerAgainstStruct `json:"Penta_kills"`
+	UnrealKills         *LolPlayerAgainstStruct `json:"Unreal_kills"`
+	LargestKillingSpree *LolPlayerAgainstStruct `json:"largest_killing_spree"`
+	LargestMultiKill    *LolPlayerAgainstStruct `json:"largest_multi_kill"`
 }
 
 // SharedTopMatchesStruct holds all information that can be present in the top_matches key.
@@ -145,7 +157,9 @@ type SharedTopMatchesStruct struct {
 		} `json:"lost"`
 	} `json:"shortest"`
 	AvgKpm float64 `json:"avg_kpm"`
-	Kpm    struct {
+
+	// Dota & Lol // TODO: Structure is different
+	Kpm struct {
 		Highest struct {
 			Kpm float64 `json:"kpm"`
 			TeamAgainstStruct
@@ -155,6 +169,19 @@ type SharedTopMatchesStruct struct {
 			TeamAgainstStruct
 		} `json:"lowest"`
 	} `json:"kpm"`
+
+	// Lol
+	Length struct {
+		Avg     float64 `json:"avg"`
+		Longest struct {
+			Won  LolTeamAgainstStruct `json:"won"`
+			Lost LolTeamAgainstStruct `json:"lost"`
+		} `json:"longest"`
+		Shortest struct {
+			Won  LolTeamAgainstStruct `json:"won"`
+			Lost LolTeamAgainstStruct `json:"lost"`
+		} `json:"shortest"`
+	} `json:"length"`
 }
 
 // CsTeamPlayByPlayStruct holds data about a team play by play stats for cs
@@ -212,6 +239,28 @@ type DotaTeamPlayByPlayStatsStruct struct {
 	} `json:"drafts"`
 }
 
+type LolTeamPlayByPlayStatsStruct struct {
+	NrMatches int64 `json:"nr_matches"`
+	NrWins    int64 `json:"nr_wins"`
+	SideStats struct {
+		Purple struct {
+			NrMatches int64 `json:"nr_matches"`
+			NrWins    int64 `json:"nr_wins"`
+		} `json:"purple"`
+		Blue struct {
+			NrMatches int64 `json:"nr_matches"`
+			NrWins    int64 `json:"nr_wins"`
+		} `json:"blue"`
+	} `json:"side_stats"`
+	Champions []struct {
+		NrMatches int64 `json:"nr_matches"`
+		NrWins    int64 `json:"nr_wins"`
+		Champions struct {
+			Name string `json:"name"`
+		} `json:"champion"`
+	} `json:"champions"`
+}
+
 // TeamAgainstStruct is a collection of common data when examining specific stats.
 // It is grouped with the specific stat in another struct.
 type TeamAgainstStruct struct {
@@ -223,6 +272,22 @@ type TeamAgainstStruct struct {
 type DotaPlayerAgainstStruct struct {
 	PlayerAgainstStruct
 	Hero HeroStruct `json:"hero"`
+}
+
+type LolTeamAgainstStruct struct {
+	Value   float64      `json:"value"`
+	MatchId int64        `json:"match_id"`
+	Against RosterStruct `json:"against"`
+}
+
+type LolPlayerAgainstStruct struct {
+	Value    float64 `json:"value"`
+	PlayerId int64   `json:"player_id"`
+	MatchId  int64   `json:"match_id"`
+	Champion struct {
+		Name string `json:"name"`
+	} `json:"champion"`
+	Against RosterStruct `json:"against"`
 }
 
 // PlayerAgainstStruct is a collection of common data when examining specific stats.

@@ -178,7 +178,7 @@ type DotaDmg struct {
 	PureDmg     int64 `json:"pure_dmg"`
 }
 
-type LolMatchSummary struct {
+type LolMatchSummaryStruct struct {
 	MatchLength  int64             `json:"match_length"`
 	BlueRoster   []LolPlayerStruct `json:"blue_roster"`
 	PurpleRoster []LolPlayerStruct `json:"purple_roster"`

@@ -51,6 +51,7 @@ type SinglePlayerStatsStruct struct {
 type PlayerPlayByPlayStatsStruct struct {
 	CsPlayerPlayByPlayStatsStruct
 	DotaPlayerPlayByPlayStatsStruct
+	LolPlayerPlayByPlayStatsStruct
 }
 
 // CsPlayerByPlayStatsStruct holds play by play stats for cs players
@@ -138,4 +139,59 @@ type DotaPlayerPerformanceStruct struct {
 	AvgCreepDenies float64 `json:"avg_creep_denies"`
 	AvgGpm         float64 `json:"avg_gpm"`
 	AvgXpm         float64 `json:"avg_xpm"`
+}
+
+type LolPlayerPlayByPlayStatsStruct struct {
+	NrMatches int64 `json:"nr_matches"`
+	NrWins    int64 `json:"nr_wins"`
+	AvgStats  struct {
+		Kills       float64 `json:"kills"`
+		Deaths      float64 `json:"deaths"`
+		Assists     float64 `json:"assists"`
+		Gpm         float64 `json:"gpm"`
+		Xpm         float64 `json:"xpm"`
+		MinionKills struct {
+			Total              float64 `json:"total"`
+			NeutralMinions     float64 `json:"neutral_minions"`
+			NeutralJungle      float64 `json:"neutral_jungle"`
+			NeutralEnemyJungle float64 `json:"neutral_enemy_jungle"`
+		} `json:"minion_kills"`
+		Wards []struct {
+			Placed    float64 `json:"placed"`
+			Destroyed float64 `json:"destroyed"`
+			Type      string  `json:"type"`
+		} `json:"wards"`
+	} `json:"avg_stats"`
+	LargestCombo struct {
+		Double              int64 `json:"double"`
+		Triple              int64 `json:"triple"`
+		Quadra              int64 `json:"quadra"`
+		Penta               int64 `json:"penta"`
+		Unreal              int64 `json:"unreal"`
+		LargestKillingSpree int64 `json:"largest_killing_spree"`
+		LargestMultiKill    int64 `json:"largest_multi_kill"`
+		KillingSprees       int64 `json:"killing_sprees"`
+	} `json:"largest_combo"`
+	MostPlayedChampion []struct {
+		Champion struct {
+			Name string `json:"name"`
+		} `json:"champion"`
+		NrMatches  int64   `json:"nr_matches"`
+		NrWins     int64   `json:"nr_wins"`
+		AvgKills   float64 `json:"avg_kills"`
+		AvgDeaths  float64 `json:"avg_deaths"`
+		AvgAssists float64 `json:"avg_assists"`
+		AvgGpm     float64 `json:"avg_gpm"`
+		AvgXpm     float64 `json:"avg_xpm"`
+	} `json:"most_played_champion"`
+	SideStats struct {
+		Purple struct {
+			NrMatches int64 `json:"nr_matches"`
+			NrWins    int64 `json:"nr_wins"`
+		} `json:"purple"`
+		Blue struct {
+			NrMatches int64 `json:"nr_matches"`
+			NrWins    int64 `json:"nr_wins"`
+		} `json:"blue"`
+	} `json:"side_stats"`
 }
