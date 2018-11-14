@@ -94,7 +94,6 @@ func (t *TeamStatsStruct) UnmarshalJSON(data []byte) error {
 	}
 	// CS
 	if _, ok := pbp_map["totals"]; ok {
-		t.PlayByPlay = t.PlayByPlay.(CsTeamStats)
 		var tmp CsTeamStats
 		// Unmarshal the play_by_play data into tt.PlayByPlay
 		if err := json.Unmarshal(pbp_data, &tmp); err != nil {
