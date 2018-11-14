@@ -161,6 +161,46 @@ The SDK will try to perform as many requests as possible concurrently. It will c
 go-routine per request per second. For example, if the specified rate limit is 10 per
 second then every second up to 10 go-routines will be created, one for each request. 
 
+# Play by Play Data
+
+Play by play data is currently only available for Dota 2, League of Legends and Counter
+Strike: Global Offensive. Exactly what datapoints are available and their formats differ
+greatly between the games.
+
+The four endpoints that can return play by play data, which field in the struct holds the
+play by play data as well as what possible types there are is shown in the table below.
+
+| Endpoint | Play by play field              | Types                                                     |
+|----------|---------------------------------|-----------------------------------------------------------|
+|Series    | Series.Summary                  | DotaSeriesSummary<br>LolSeriesSummary<br>CsSeriesSummary  |
+|Matches   | Match.MatchSummary              | DotaMatchSummary<br>LolMatchSummary<br>CsMatchSummary     |
+|Teams     | Team.TeamStats.PlayByPlay       | DotaTeamStats<br>LolTeamStats<br>CsTeamStats<br>          |
+|Players   | Player.PlayerStats.PlayByPlay   | DotaPlayerStats<br>LolPlayerStats<br>CsPlayerStats        |
+
+In practice, this means that when accessing the play by play data a type switch must be
+performed. For example if you want to do something with the play by play data associated
+with a team:
+
+```go
+// Note that for this you have to import the structs sub-package
+import . "github.com/AbiosGaming/go-sdk-v2/structs"
+
+team, _ := a.MatchesById(301281, nil)
+switch pbp := team.TeamStats.PlayByPlay.(type) {
+	case DotaTeamStats:
+		// Do something
+		break
+	case LolTeamStats:
+		// Do something
+		break
+	case CsTeamStats:
+		// Do something
+		break
+}
+```
+
+Handling the other endpoints can be done similarly.
+
 # Example Applications
 
 ## Usage
