@@ -60,7 +60,7 @@ func (m *MatchStruct) UnmarshalJSON(data []byte) error {
 			}
 			mm.MatchSummary = tmp
 		//Cs
-		case 3:
+		case 5:
 			var tmp CsMatchSummary
 			if err := json.Unmarshal(summary, &tmp); err != nil {
 				return err

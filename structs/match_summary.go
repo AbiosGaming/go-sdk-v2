@@ -175,10 +175,16 @@ type DotaDmg struct {
 }
 
 type LolMatchSummary struct {
-	MatchLength  int64             `json:"match_length"`
-	BlueRoster   []LolPlayerStruct `json:"blue_roster"`
-	PurpleRoster []LolPlayerStruct `json:"purple_roster"`
-	Firsts       struct {
+	MatchLength int64 `json:"match_length"`
+	BlueRoster  struct {
+		Id      int64             `json:"id"`
+		Players []LolPlayerStruct `json:"players"`
+	} `json:"blue_roster"`
+	PurpleRoster struct {
+		Id      int64             `json:"id"`
+		Players []LolPlayerStruct `json:"players"`
+	} `json:"purple_roster"`
+	Firsts struct {
 		FirstBlood struct {
 			PlayerId  int64  `json:"player_id"`
 			Timestamp int64  `json:"timestamp"`
@@ -278,21 +284,23 @@ type LolPlayerStruct struct {
 		KillingSprees       int64 `json:"killing_sprees"`
 	} `json:"kill_combos"`
 	Items struct {
-		Slot1 LolItemStruct `json:"slot_1"`
-		Slot2 LolItemStruct `json:"slot_2"`
-		Slot3 LolItemStruct `json:"slot_3"`
-		Slot4 LolItemStruct `json:"slot_4"`
-		Slot5 LolItemStruct `json:"slot_5"`
-		Slot6 LolItemStruct `json:"slot_6"`
-		Slot7 LolItemStruct `json:"slot_7"`
+		Inventory struct {
+			Slot1 LolItemStruct `json:"slot_1"`
+			Slot2 LolItemStruct `json:"slot_2"`
+			Slot3 LolItemStruct `json:"slot_3"`
+			Slot4 LolItemStruct `json:"slot_4"`
+			Slot5 LolItemStruct `json:"slot_5"`
+			Slot6 LolItemStruct `json:"slot_6"`
+			Slot7 LolItemStruct `json:"slot_7"`
+		} `json:"inventory"`
 	} `json:"items"`
 	Damage struct {
 		Total        LolDmgStruct `json:"total"`
 		ToHeroes     LolDmgStruct `json:"to_heroes"`
 		DamageTaken  LolDmgStruct `json:"damage_taken"`
-		LargestCrit  LolDmgStruct `json:"largest_crit"`
-		ToObjectives LolDmgStruct `json:"to_objectives"`
-		ToTurrets    LolDmgStruct `json:"to_turrets"`
+		LargestCrit  int64        `json:"largest_crit"`
+		ToObjectives int64        `json:"to_objectives"`
+		ToTurrets    int64        `json:"to_turrets"`
 	} `json:"damage"`
 	Support struct {
 		AmountHealed     int64 `json:"amount_healed"`
@@ -324,37 +332,37 @@ type LolPlayerStruct struct {
 		PrimaryPath struct {
 			Path struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"path"`
 			Keystone struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"keystone"`
 			Rune1 struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"rune_1"`
 			Rune2 struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"rune_2"`
 			Rune3 struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"rune_3"`
 		} `json:"primary_path"`
 		SecondaryPath struct {
 			Path struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"path"`
 			Rune1 struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"rune_1"`
 			Rune2 struct {
 				Name       string `json:"name"`
-				ExternalId int64  `json:"internal_id"`
+				ExternalId int64  `json:"external_id"`
 			} `json:"rune_2"`
 		} `json:"secondary_path"`
 	} `json:"runes_reforged"`
