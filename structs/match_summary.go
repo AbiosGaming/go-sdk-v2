@@ -1,14 +1,10 @@
 package structs
 
 // MatchSummaryStruct holds information about play by play statistics for a certain match.
-type MatchSummaryStruct struct {
-	CsMatchSummaryStruct
-	DotaMatchSummaryStruct
-	LolMatchSummaryStruct
-}
+type MatchSummaryStruct interface{}
 
 // CsMatchSummaryStruct is the summarization of a CS:GO match.
-type CsMatchSummaryStruct struct {
+type CsMatchSummary struct {
 	Home        int64 `json:"home"`
 	Away        int64 `json:"away"`
 	MatchLength int64 `json:"match_length"`
@@ -81,7 +77,7 @@ type CsScoreBoardEntry struct {
 }
 
 // DotaMatchSummaryStruct is the summarization of a Dota match.
-type DotaMatchSummaryStruct struct {
+type DotaMatchSummary struct {
 	RadiantRoster int64 `json:"radiant_roster"`
 	DireRoster    int64 `json:"dire_roster"`
 	MatchLength   int64 `json:"match_length"`
@@ -178,7 +174,7 @@ type DotaDmg struct {
 	PureDmg     int64 `json:"pure_dmg"`
 }
 
-type LolMatchSummaryStruct struct {
+type LolMatchSummary struct {
 	MatchLength  int64             `json:"match_length"`
 	BlueRoster   []LolPlayerStruct `json:"blue_roster"`
 	PurpleRoster []LolPlayerStruct `json:"purple_roster"`
