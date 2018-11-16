@@ -148,7 +148,7 @@ type DotaMatchSummary struct {
 				Slot1 DotaItemStruct `json:"slot_1"`
 				Slot2 DotaItemStruct `json:"slot_2"`
 				Slot3 DotaItemStruct `json:"slot_3"`
-			} `json:"backback"`
+			} `json:"backpack"`
 			Stash struct {
 				Slot1 DotaItemStruct `json:"slot_1"`
 				Slot2 DotaItemStruct `json:"slot_2"`
@@ -305,7 +305,7 @@ type LolPlayerStruct struct {
 	Support struct {
 		AmountHealed     int64 `json:"amount_healed"`
 		UnitsHealed      int64 `json:"units_healed"`
-		CrowsControlTime int64 `json:"crowd_control_time"`
+		CrowdControlTime int64 `json:"crowd_control_time"`
 	} `json:"support"`
 	MinionKills struct {
 		Total              int64 `json:"total"`
