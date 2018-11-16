@@ -189,13 +189,10 @@ team, _ := a.MatchesById(301281, nil)
 switch pbp := team.TeamStats.PlayByPlay.(type) {
 	case DotaTeamStats:
 		// Do something
-		break
 	case LolTeamStats:
 		// Do something
-		break
 	case CsTeamStats:
 		// Do something
-		break
 }
 ```
 
