@@ -1,5 +1,7 @@
 package structs
 
+import "encoding/json"
+
 // SeriesStructPaginated holds a list of SeriesStruct as well as information about pages.
 type SeriesStructPaginated struct {
 	LastPage    int64          `json:"last_page,omitempty"`
@@ -32,4 +34,59 @@ type SeriesStruct struct {
 	Performance     SeriesPerformanceStruct `json:"performance,omitempty"`
 	SportsbookOdds  []SportsbookOddsStruct  `json:"sportsbook_odds"`
 	Chain           *[]int64                `json:"chain"`
+	Summary         SeriesSummary           `json:"summary"`
+}
+
+// avoid recursion when unmarshaling
+type seriesStruct SeriesStruct
+
+// We need to unmarshal summary into the game-specific struct
+func (s *SeriesStruct) UnmarshalJSON(data []byte) error {
+	// find the outer-most keys
+	var partial map[string]json.RawMessage
+	if err := json.Unmarshal(data, &partial); err != nil {
+		return err
+	}
+	summary := partial["summary"]
+
+	// This is not strictly necessary but it is faster
+	delete(partial, "summary")
+	data, _ = json.Marshal(partial)
+
+	var ss seriesStruct
+	if err := json.Unmarshal(data, &ss); err != nil {
+		return err
+	}
+
+	// "null" is 4 bytes
+	if len(summary) > 4 {
+		switch ss.Game.Id {
+		// Dota
+		case 1:
+			var tmp DotaSeriesSummary
+			if err := json.Unmarshal(summary, &tmp); err != nil {
+				return err
+			}
+			ss.Summary = tmp
+		// Lol
+		case 2:
+			var tmp LolSeriesSummary
+			if err := json.Unmarshal(summary, &tmp); err != nil {
+				return err
+			}
+			ss.Summary = tmp
+		//Cs
+		case 5:
+			var tmp CsSeriesSummary
+			if err := json.Unmarshal(summary, &tmp); err != nil {
+				return err
+			}
+			ss.Summary = tmp
+		default:
+		}
+	}
+
+	*s = SeriesStruct(ss)
+	return nil
+
 }
