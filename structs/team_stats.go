@@ -2,7 +2,6 @@ package structs
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // TeamStatsStruct holds performance statistics about a particular Team.
@@ -78,7 +77,6 @@ func (t *TeamStatsStruct) UnmarshalJSON(data []byte) error {
 		var tmp DotaTeamStats
 		// Unmarshal the play_by_play data into tt.PlayByPlay
 		if err := json.Unmarshal(pbp_data, &tmp); err != nil {
-			fmt.Println(err)
 			return err
 		}
 		tt.PlayByPlay = tmp
@@ -187,12 +185,12 @@ type DotaTeamStats struct {
 	} `json:"faction_stats"`
 	Drafts struct {
 		Own struct {
-			MostPicked []DotaHeroWithAmountStruct `json:"most_picked"`
-			MostBanned []DotaHeroWithAmountStruct `json:"most_banned"`
+			MostPicked []DotaHeroWithWinsStruct `json:"most_picked"`
+			MostBanned []DotaHeroWithWinsStruct `json:"most_banned"`
 		} `json:"own"`
 		Opponenents struct {
-			MostPicked []DotaHeroWithAmountStruct `json:"most_picked"`
-			MostBanned []DotaHeroWithAmountStruct `json:"most_banned"`
+			MostPicked []DotaHeroWithWinsStruct `json:"most_picked"`
+			MostBanned []DotaHeroWithWinsStruct `json:"most_banned"`
 		} `json:"opponents"`
 	} `json:"drafts"`
 	TopStats struct {
@@ -352,7 +350,8 @@ type PlayerAgainstStruct struct {
 
 // DotaHeroWithAmountStruct holds information about a Dota Hero and an integer representing
 // and amount (e.g amount of times picked).
-type DotaHeroWithAmountStruct struct {
+type DotaHeroWithWinsStruct struct {
 	Amount int64      `json:"amount"`
+	Wins   int64      `json:"wins"`
 	Hero   HeroStruct `json:"hero"`
 }
