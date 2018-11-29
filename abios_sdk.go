@@ -77,17 +77,16 @@ func (a *client) authenticator() {
 			continue // It succeded.
 		}
 
-		// If we get an error we retry every 30 seconds for 5 minutes before we override
+		// If we get an error we retry every 30 seconds for 7 minutes before we override
 		// the responses.
 		retry := time.NewTicker(30 * time.Second)
-		fail := time.NewTimer(5 * time.Minute)
+		fail := time.NewTimer(7 * time.Minute)
 
 		select {
 		case <-retry.C:
 			err = a.authenticate()
 			if err == nil {
-				a.handler.override = responseOverride{override: false, data: result{}}
-				return
+				continue
 			}
 		case <-fail.C:
 			a.handler.override = responseOverride{override: true, data: *err}

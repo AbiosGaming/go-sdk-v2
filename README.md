@@ -78,7 +78,8 @@ to query for a new token when there is 10 minutes or less until the current one 
 
 If the initial authentication fails the error message returned will override all subsequent
 responses. If an authentication request other than the intial one fails the SDK will re-try
-every 30 seconds for 5 minutes, after which all responses will be overriden (and thus return an error).
+every 30 seconds for 7 minutes, after which all responses will be overriden (and thus return an error).
+If this failure happens for long-running services a restart will be necessary.
 
 # <a name="rate"></a>Outgoing Rate
 Allowing the specification of an outgoing rate is to minimize the number of "429 (Too many
