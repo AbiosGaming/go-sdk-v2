@@ -188,7 +188,7 @@ type DotaTeamStats struct {
 			MostPicked []DotaHeroWithWinsStruct `json:"most_picked"`
 			MostBanned []DotaHeroWithWinsStruct `json:"most_banned"`
 		} `json:"own"`
-		Opponenents struct {
+		Opponents struct {
 			MostPicked []DotaHeroWithWinsStruct `json:"most_picked"`
 			MostBanned []DotaHeroWithWinsStruct `json:"most_banned"`
 		} `json:"opponents"`
