@@ -271,7 +271,7 @@ type LolTeamStats struct {
 	Champions []struct {
 		NrMatches int64 `json:"nr_matches"`
 		NrWins    int64 `json:"nr_wins"`
-		Champions struct {
+		Champion  struct {
 			Name string `json:"name"`
 		} `json:"champion"`
 	} `json:"champions"`
