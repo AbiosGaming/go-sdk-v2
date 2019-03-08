@@ -57,7 +57,7 @@ func apiCall(req *http.Request) (int, []byte, error) {
 		// We didn't manage to actually unmarshal into the struct. Create an error with what
 		// we have
 		if target.ErrorDescription == "" {
-			return resp.StatusCode, body, fmt.Errorf(body)
+			return resp.StatusCode, body, fmt.Errorf(string(body))
 		}
 
 		return resp.StatusCode, nil, target
