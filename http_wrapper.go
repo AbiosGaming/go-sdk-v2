@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/AbiosGaming/go-sdk-v2/structs"
+	"github.com/AbiosGaming/go-sdk-v2/v3/structs"
 )
 
 // performRequest creates the request, sends it and return the response's statuscode along

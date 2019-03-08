@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	. "github.com/AbiosGaming/go-sdk-v2/structs"
+	. "github.com/AbiosGaming/go-sdk-v2/v3/structs"
 )
 
 // Constant variables that represents endpoints

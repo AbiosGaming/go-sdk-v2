@@ -26,14 +26,17 @@ create a pull request) and we'll get to it as soon as possible!
 # Installation
 
 ```Bash
-$ go get -u github.com/AbiosGaming/go-sdk-v2/
+$ go get -u github.com/AbiosGaming/go-sdk-v2
 ```
 
 ## Quick Start
+
 Add the import line:
 
 ```Go
 import "github.com/AbiosGaming/go-sdk-v2"
+
+import "github.com/AbiosGaming/go-sdk-v2/v3" // If you are using modules
 ```
 
 Use the function `abios.New(username, password string)` to create a new instance of the
@@ -181,6 +184,7 @@ with a team:
 ```go
 // Note that for this you have to import the structs sub-package
 import . "github.com/AbiosGaming/go-sdk-v2/structs"
+import . "github.com/AbiosGaming/go-sdk-v2/v3/structs" // If you are using modules
 
 team, _ := a.MatchesById(301281, nil)
 switch pbp := team.TeamStats.PlayByPlay.(type) {
@@ -212,7 +216,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AbiosGaming/go-sdk-v2"
+    "github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 func main() {
@@ -242,7 +246,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AbiosGaming/go-sdk-v2"
+    "github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 func main() {
@@ -291,7 +295,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AbiosGaming/go-sdk-v2"
+    "github.com/AbiosGaming/go-sdk-v2/v3"
     "time"
 )
 
@@ -348,7 +352,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/AbiosGaming/go-sdk-v2"
+	"github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 // currentCalendar holds what we respond to our users
