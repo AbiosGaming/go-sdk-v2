@@ -319,7 +319,7 @@ func (a *client) TeamsById(id int64, params Parameters) (TeamStruct, error) {
 	}
 
 	target := TeamStruct{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -338,7 +338,7 @@ func (a *client) Organisations(params Parameters) (OrganisationStructPaginated, 
 	}
 
 	target := OrganisationStructPaginated{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -354,7 +354,7 @@ func (a *client) OrganisationsById(id int64) (OrganisationStruct, error) {
 	}
 
 	target := OrganisationStruct{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -373,7 +373,7 @@ func (a *client) Players(params Parameters) (PlayerStructPaginated, error) {
 	}
 
 	target := PlayerStructPaginated{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -393,7 +393,7 @@ func (a *client) PlayersById(id int64, params Parameters) (PlayerStruct, error) 
 	}
 
 	target := PlayerStruct{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -413,7 +413,7 @@ func (a *client) RostersById(id int64, params Parameters) (RosterStruct, error) 
 	}
 
 	target := RosterStruct{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -434,7 +434,7 @@ func (a *client) Search(query string, params Parameters) ([]SearchResultStruct, 
 	}
 
 	target := []SearchResultStruct{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -453,7 +453,7 @@ func (a *client) Incidents(params Parameters) (IncidentStructPaginated, error) {
 	}
 
 	target := IncidentStructPaginated{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
@@ -469,7 +469,7 @@ func (a *client) IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, error) {
 	}
 
 	target := SeriesIncidentsStruct{}
-	err := json.Unmarshal(result.body, target)
+	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
