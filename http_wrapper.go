@@ -45,8 +45,9 @@ func apiCall(req *http.Request) (int, []byte, error) {
 	}
 
 	var target *structs.ErrorStruct = nil
-	// If it is an error try to unmarshal it into the ErrorStruct
-	if resp.StatusCode < 200 || 300 <= resp.StatusCode {
+	// If it is an error try to unmarshal it into the ErrorStruct.
+	// 410 still returns data in the expected format
+	if resp.StatusCode != 410 && (resp.StatusCode < 200 || 300 <= resp.StatusCode) {
 		err := json.Unmarshal(body, target)
 		if err != nil {
 			return 0, nil, err

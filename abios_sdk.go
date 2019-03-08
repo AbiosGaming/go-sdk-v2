@@ -129,20 +129,20 @@ func (a *client) authenticate() *result {
 
 	statusCode, b, err := apiCall(req)
 	if err != nil {
-		return &result{statuscode: 0, body: nil, err: err}
+		return &result{body: nil, err: err}
 	}
 	dec := json.NewDecoder(bytes.NewBuffer(b))
 	if 200 <= statusCode && statusCode < 300 {
 		target := AccessTokenStruct{}
 		err := dec.Decode(&target)
 		if err != nil {
-			return &result{statuscode: 0, body: nil, err: err}
+			return &result{body: nil, err: err}
 		}
 		a.oauth = target
 		return nil
 	}
 
-	return &result{statuscode: statusCode, body: b, err: nil}
+	return &result{body: b, err: nil}
 }
 
 // Games queries the /games endpoint and returns a GameStructPaginated.
