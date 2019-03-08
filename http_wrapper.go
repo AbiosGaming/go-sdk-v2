@@ -2,6 +2,7 @@ package abios
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -52,6 +53,13 @@ func apiCall(req *http.Request) (int, []byte, error) {
 		if err != nil {
 			return 0, nil, err
 		}
+
+		// We didn't manage to actually unmarshal into the struct. Create an error with what
+		// we have
+		if target.ErrorDescription == "" {
+			return resp.StatusCode, body, fmt.Errorf(body)
+		}
+
 		return resp.StatusCode, nil, target
 	}
 
