@@ -111,6 +111,10 @@ otherwise they will just be forwarded as-is from the standard library.
 
 The ErrorStruct implements the `Stringer` interface as well as the `error` interface.
 
+In order to implement the `error` interface a struct cannot have the field `Error` (as
+it would clash with the interface method). Therefore, what is returned with the json key
+`"error"` is available in `ErrorStruct` in the field `ErrorMessage`.
+
 # Endpoints
 For each endpoint in the /v2/ API you can expect to find a corresponding method implemented
 on the struct returned by `abios.New`. The names of these method directly corresponds to
