@@ -33,8 +33,12 @@ type SeriesStruct struct {
 	Tournament      TournamentStruct        `json:"tournament,omitempty"`
 	Performance     SeriesPerformanceStruct `json:"performance,omitempty"`
 	SportsbookOdds  []SportsbookOddsStruct  `json:"sportsbook_odds"`
-	Chain           *[]int64                `json:"chain"`
-	Summary         SeriesSummary           `json:"summary"`
+	Chain           *[]struct {
+		RootId   int64 `json:"root_id"`
+		SeriesId int64 `json:"series_id"`
+		Order    int64 `json:"order"`
+	} `json:"chain"`
+	Summary SeriesSummary `json:"summary"`
 }
 
 // avoid recursion when unmarshaling
