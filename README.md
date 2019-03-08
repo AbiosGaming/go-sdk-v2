@@ -101,16 +101,12 @@ outgoing rate. However, not every clock is synchronized with our server and not 
 application uses the same instance of the SDK.
 
 # <a name="errors"></a>Errors
-Errors returned from the SDK is **_not_** of type `error` but instead a pointer to a struct
-corresponding to the JSON returned from the endpoint when an error occurs. See [official documentation](https://docs.abiosgaming.com/v2/reference#errors).
 
-If no errors are returned type will be `<nil>`.
+Errors returned from the SDK are of type `error`. When and error is returned from the API
+they will be of type `structs.ErrorStruct` (See [here](https://docs.abiosgaming.com/v2/reference#errors),
+otherwise they will just be forwarded as-is from the standard library.
 
-The ErrorStruct implements the `Stringer` interface.
-
-Errors of type `error` will be forwarded to your application in the form of an ErrorStruct.
-The `ErrorCode` will then be equal to 0 and the `Error` will specify that is is an application
-error (rather than a client or server error).
+The ErrorStruct implements the `Stringer` interface as well as the `error` interface.
 
 # Endpoints
 For each endpoint in the /v2/ API you can expect to find a corresponding method implemented

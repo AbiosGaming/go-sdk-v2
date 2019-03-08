@@ -52,6 +52,7 @@ type request struct {
 type result struct {
 	statuscode int
 	body       []byte
+	err        error
 }
 
 // requestHandler buffers requests and sends them out at a user-specified rate.
@@ -182,7 +183,7 @@ func (r *requestHandler) dispatcher() {
 								if r.override.override {
 									currentRequest.ch <- r.override.data
 								} else {
-									re.statuscode, re.body = performRequest(currentRequest.url, currentRequest.params)
+									re.statuscode, re.body, re.err = performRequest(currentRequest.url, currentRequest.params)
 									currentRequest.ch <- re
 								}
 
