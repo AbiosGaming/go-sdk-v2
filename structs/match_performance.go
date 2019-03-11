@@ -2,31 +2,31 @@ package structs
 
 import "encoding/json"
 
-// MatchPerformanceStruct is associated with a Match and contains performance information
+// MatchPerformance is associated with a Match and contains performance information
 // about the Rosters with respect to the specific map.
-type MatchPerformanceStruct struct {
-	Winrate MatchWinrateStruct `json:"winrate,omitempty"`
+type MatchPerformance struct {
+	Winrate MatchWinrate `json:"winrate,omitempty"`
 }
 
-// MatchWinrateStruct holds the top-level keys for winrate statistics.
-type MatchWinrateStruct struct {
-	Overall *MatchWinrateOverallStruct `json:"over_all"`
-	PerMap  []MatchWinratePerMapStruct `json:"per_map"`
+// MatchWinrate holds the top-level keys for winrate statistics.
+type MatchWinrate struct {
+	Overall *MatchWinrateOverall `json:"over_all"`
+	PerMap  []MatchWinratePerMap `json:"per_map"`
 }
 
-// MatchWinrateOverallStruct holds information about the summarized performance statistics.
-type MatchWinrateOverallStruct struct {
+// MatchWinrateOverall holds information about the summarized performance statistics.
+type MatchWinrateOverall struct {
 	History int64              `json:"history,omitempty"`
 	Rosters map[string]float64 `json:"-"`
 }
 
-type _MatchWinrateOverallStruct MatchWinrateOverallStruct
+type _MatchWinrateOverall MatchWinrateOverall
 
-func (m *MatchWinrateOverallStruct) UnmarshalJSON(b []byte) (err error) {
-	foo := _MatchWinrateOverallStruct{}
+func (m *MatchWinrateOverall) UnmarshalJSON(b []byte) (err error) {
+	foo := _MatchWinrateOverall{}
 
 	if err = json.Unmarshal(b, &foo); err == nil {
-		*m = MatchWinrateOverallStruct(foo)
+		*m = MatchWinrateOverall(foo)
 	}
 
 	stuff := make(map[string]interface{})
@@ -42,20 +42,20 @@ func (m *MatchWinrateOverallStruct) UnmarshalJSON(b []byte) (err error) {
 	return err
 }
 
-// MatchWinratePerMapStruct breaks down the winrate statistics per Map.
-type MatchWinratePerMapStruct struct {
-	Map     MapStruct          `json:"map,omitempty"`
+// MatchWinratePerMap breaks down the winrate statistics per Map.
+type MatchWinratePerMap struct {
+	Map     Map                `json:"map,omitempty"`
 	History int64              `json:"history,omitempty"`
 	Rosters map[string]float64 `json:"-"`
 }
 
-type _MatchWinratePerMapStruct MatchWinratePerMapStruct
+type _MatchWinratePerMap MatchWinratePerMap
 
-func (m *MatchWinratePerMapStruct) UnmarshalJSON(b []byte) (err error) {
-	foo := _MatchWinratePerMapStruct{}
+func (m *MatchWinratePerMap) UnmarshalJSON(b []byte) (err error) {
+	foo := _MatchWinratePerMap{}
 
 	if err = json.Unmarshal(b, &foo); err == nil {
-		*m = MatchWinratePerMapStruct(foo)
+		*m = MatchWinratePerMap(foo)
 	}
 
 	stuff := make(map[string]interface{})

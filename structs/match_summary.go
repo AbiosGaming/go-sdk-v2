@@ -1,9 +1,9 @@
 package structs
 
-// MatchSummaryStruct holds information about play by play statistics for a certain match.
-type MatchSummaryStruct interface{}
+// MatchSummary holds information about play by play statistics for a certain match.
+type MatchSummary interface{}
 
-// CsMatchSummaryStruct is the summarization of a CS:GO match.
+// CsMatchSummary is the summarization of a CS:GO match.
 type CsMatchSummary struct {
 	Home        int64 `json:"home"`
 	Away        int64 `json:"away"`
@@ -19,35 +19,35 @@ type CsMatchSummary struct {
 		Winner     int64  `json:"winner"`
 		WinReason  string `json:"win_reason"`
 		BombEvents []struct {
-			Type       string    `json:"type"`
-			PlayerId   int64     `json:"player_id"`
-			RoundClock int64     `json:"round_clock"`
-			Pos        PosStruct `json:"pos"`
+			Type       string `json:"type"`
+			PlayerId   int64  `json:"player_id"`
+			RoundClock int64  `json:"round_clock"`
+			Pos        Pos    `json:"pos"`
 		} `json:"bomb_events"`
 		Kills []struct {
 			RoundClock int64 `json:"round_clock"`
 			Damage     int64 `json:"damage"`
 			Attacker   struct {
-				PlayerId int64     `json:"player_id"`
-				Pos      PosStruct `json:"pos"`
+				PlayerId int64 `json:"player_id"`
+				Pos      Pos   `json:"pos"`
 			} `json:"attacker"`
 			Victim struct {
-				PlayerId int64     `json:"player_id"`
-				Pos      PosStruct `json:"pos"`
+				PlayerId int64 `json:"player_id"`
+				Pos      Pos   `json:"pos"`
 			} `json:"victim"`
-			Assists  *int64       `json:"assist"`
-			Weapon   WeaponStruct `json:"weapon"`
-			HitGroup string       `json:"hit_group"`
+			Assists  *int64 `json:"assist"`
+			Weapon   Weapon `json:"weapon"`
+			HitGroup string `json:"hit_group"`
 		} `json:"kills"`
 		PlayerStats struct {
-			TSide  []RoundPlayerStatsStruct `json:"t_side"`
-			CtSide []RoundPlayerStatsStruct `json:"ct_side"`
+			TSide  []RoundPlayerStats `json:"t_side"`
+			CtSide []RoundPlayerStats `json:"ct_side"`
 		} `json:"player_stats"`
 	} `json:"rounds"`
 }
 
-// RoundPlayerStatsStruct reflects how well a player performed in a round.
-type RoundPlayerStatsStruct struct {
+// RoundPlayerStats reflects how well a player performed in a round.
+type RoundPlayerStats struct {
 	PlayerId int64   `json:"player_id"`
 	DmgGiven float64 `json:"dmg_given"`
 	DmgTaken float64 `json:"dmg_taken"`
@@ -60,8 +60,8 @@ type RoundPlayerStatsStruct struct {
 	} `json:"accuracy"`
 }
 
-// PosStruct hold x, y and z coordinates.
-type PosStruct struct {
+// Pos hold x, y and z coordinates.
+type Pos struct {
 	X float64 `json:"x"`
 	Y float64 `json:"y"`
 	Z float64 `json:"z"`
@@ -76,16 +76,16 @@ type CsScoreBoardEntry struct {
 	Adr      float64 `json:"adr"`
 }
 
-// DotaMatchSummaryStruct is the summarization of a Dota match.
+// DotaMatchSummary is the summarization of a Dota match.
 type DotaMatchSummary struct {
 	RadiantRoster int64 `json:"radiant_roster"`
 	DireRoster    int64 `json:"dire_roster"`
 	MatchLength   int64 `json:"match_length"`
 	DraftSeq      []struct {
-		Order    int64      `json:"order"`
-		Type     string     `json:"type"`
-		RosterId int64      `json:"roster_id"`
-		Hero     HeroStruct `json:"hero"`
+		Order    int64  `json:"order"`
+		Type     string `json:"type"`
+		RosterId int64  `json:"roster_id"`
+		Hero     Hero   `json:"hero"`
 	} `json:"draft_seq"`
 	FirstBlood struct {
 		Killer int64 `json:"killer"`
@@ -98,15 +98,15 @@ type DotaMatchSummary struct {
 		AtTime  int64   `json:"at_time"`
 		Assists []int64 `json:"assists"`
 	} `json:"kills"`
-	StructureDest []struct {
-		Killer        int64  `json:"killer"`
-		StructureType string `json:"structure_type"`
-		StructurePos  string `json:"structure_pos"`
-		AtTime        int64  `json:"at_time"`
+	ureDest []struct {
+		Killer  int64  `json:"killer"`
+		ureType string `json:"structure_type"`
+		urePos  string `json:"structure_pos"`
+		AtTime  int64  `json:"at_time"`
 	} `json:"structure_dest"`
 	PlayerStats []struct {
 		PlayerId    int64            `json:"player_id"`
-		Hero        HeroStruct       `json:"hero"`
+		Hero        Hero             `json:"hero"`
 		Kills       int64            `json:"kills"`
 		Deaths      int64            `json:"deaths"`
 		Assists     int64            `json:"assists"`
@@ -137,25 +137,25 @@ type DotaMatchSummary struct {
 		} `json:"hero_healing"`
 		Items struct {
 			Inventory struct {
-				Slot1 DotaItemStruct `json:"slot_1"`
-				Slot2 DotaItemStruct `json:"slot_2"`
-				Slot3 DotaItemStruct `json:"slot_3"`
-				Slot4 DotaItemStruct `json:"slot_4"`
-				Slot5 DotaItemStruct `json:"slot_5"`
-				Slot6 DotaItemStruct `json:"slot_6"`
+				Slot1 DotaItem `json:"slot_1"`
+				Slot2 DotaItem `json:"slot_2"`
+				Slot3 DotaItem `json:"slot_3"`
+				Slot4 DotaItem `json:"slot_4"`
+				Slot5 DotaItem `json:"slot_5"`
+				Slot6 DotaItem `json:"slot_6"`
 			} `json:"inventory"`
 			Backpack struct {
-				Slot1 DotaItemStruct `json:"slot_1"`
-				Slot2 DotaItemStruct `json:"slot_2"`
-				Slot3 DotaItemStruct `json:"slot_3"`
+				Slot1 DotaItem `json:"slot_1"`
+				Slot2 DotaItem `json:"slot_2"`
+				Slot3 DotaItem `json:"slot_3"`
 			} `json:"backpack"`
 			Stash struct {
-				Slot1 DotaItemStruct `json:"slot_1"`
-				Slot2 DotaItemStruct `json:"slot_2"`
-				Slot3 DotaItemStruct `json:"slot_3"`
-				Slot4 DotaItemStruct `json:"slot_4"`
-				Slot5 DotaItemStruct `json:"slot_5"`
-				Slot6 DotaItemStruct `json:"slot_6"`
+				Slot1 DotaItem `json:"slot_1"`
+				Slot2 DotaItem `json:"slot_2"`
+				Slot3 DotaItem `json:"slot_3"`
+				Slot4 DotaItem `json:"slot_4"`
+				Slot5 DotaItem `json:"slot_5"`
+				Slot6 DotaItem `json:"slot_6"`
 			} `json:"stash"`
 		} `json:"items"`
 	} `json:"player_stats"`
@@ -177,12 +177,12 @@ type DotaDmg struct {
 type LolMatchSummary struct {
 	MatchLength int64 `json:"match_length"`
 	BlueRoster  struct {
-		Id      int64             `json:"id"`
-		Players []LolPlayerStruct `json:"players"`
+		Id      int64       `json:"id"`
+		Players []LolPlayer `json:"players"`
 	} `json:"blue_roster"`
 	PurpleRoster struct {
-		Id      int64             `json:"id"`
-		Players []LolPlayerStruct `json:"players"`
+		Id      int64       `json:"id"`
+		Players []LolPlayer `json:"players"`
 	} `json:"purple_roster"`
 	Firsts struct {
 		FirstBlood struct {
@@ -223,28 +223,28 @@ type LolMatchSummary struct {
 		Timestamp int64  `json:"timestamp"`
 	} `json:"wards"`
 	KillTimeline []struct {
-		Timestamp int64     `json:"timestamp"`
-		Position  PosStruct `json:"position"`
-		KillerId  int64     `json:"killer_id"`
-		VictimId  int64     `json:"victim_id"`
-		Assists   []int64   `json:"assists"`
+		Timestamp int64   `json:"timestamp"`
+		Position  Pos     `json:"position"`
+		KillerId  int64   `json:"killer_id"`
+		VictimId  int64   `json:"victim_id"`
+		Assists   []int64 `json:"assists"`
 	} `json:"kill_timeline"`
 	ObjectiveEvents struct {
 		Towers []struct {
 			Type    string  `json:"type"`
 			Assists []int64 `json:"assists"`
-			LolLaneEventStruct
+			LolLaneEvent
 		} `json:"towers"`
 		Inihibitors []struct {
-			LolLaneEventStruct
+			LolLaneEvent
 			Assists []int64 `json:"assists"`
 		} `json:"inhibitors"`
-		Barons  []LolEventStruct `json:"barons"`
+		Barons  []LolEvent `json:"barons"`
 		Dragons []struct {
 			Type string `json:"type"`
-			LolEventStruct
+			LolEvent
 		} `json:"dragons"`
-		RiftHeralds []LolEventStruct `json:"rift_heralds"`
+		RiftHeralds []LolEvent `json:"rift_heralds"`
 	} `json:"objective_events"`
 	Draft []struct {
 		RosterId int64 `json:"roster_id"`
@@ -257,7 +257,7 @@ type LolMatchSummary struct {
 	} `json:"draft"`
 }
 
-type LolPlayerStruct struct {
+type LolPlayer struct {
 	PlayerId   int64   `json:"player_id"`
 	Role       string  `json:"role"`
 	Lane       string  `json:"lane"`
@@ -285,22 +285,22 @@ type LolPlayerStruct struct {
 	} `json:"kill_combos"`
 	Items struct {
 		Inventory struct {
-			Slot1 LolItemStruct `json:"slot_1"`
-			Slot2 LolItemStruct `json:"slot_2"`
-			Slot3 LolItemStruct `json:"slot_3"`
-			Slot4 LolItemStruct `json:"slot_4"`
-			Slot5 LolItemStruct `json:"slot_5"`
-			Slot6 LolItemStruct `json:"slot_6"`
-			Slot7 LolItemStruct `json:"slot_7"`
+			Slot1 LolItem `json:"slot_1"`
+			Slot2 LolItem `json:"slot_2"`
+			Slot3 LolItem `json:"slot_3"`
+			Slot4 LolItem `json:"slot_4"`
+			Slot5 LolItem `json:"slot_5"`
+			Slot6 LolItem `json:"slot_6"`
+			Slot7 LolItem `json:"slot_7"`
 		} `json:"inventory"`
 	} `json:"items"`
 	Damage struct {
-		Total        LolDmgStruct `json:"total"`
-		ToHeroes     LolDmgStruct `json:"to_heroes"`
-		DamageTaken  LolDmgStruct `json:"damage_taken"`
-		LargestCrit  int64        `json:"largest_crit"`
-		ToObjectives int64        `json:"to_objectives"`
-		ToTurrets    int64        `json:"to_turrets"`
+		Total        LolDmg `json:"total"`
+		ToHeroes     LolDmg `json:"to_heroes"`
+		DamageTaken  LolDmg `json:"damage_taken"`
+		LargestCrit  int64  `json:"largest_crit"`
+		ToObjectives int64  `json:"to_objectives"`
+		ToTurrets    int64  `json:"to_turrets"`
 	} `json:"damage"`
 	Support struct {
 		AmountHealed     int64 `json:"amount_healed"`
@@ -373,19 +373,19 @@ type LolPlayerStruct struct {
 	} `json:"skillups"`
 }
 
-type LolDmgStruct struct {
+type LolDmg struct {
 	Magic    int64 `json:"magic"`
 	Physical int64 `json:"physical"`
 	True     int64 `json:"true"`
 }
 
-type LolEventStruct struct {
-	Timestamp int64     `json:"timestamp"`
-	Position  PosStruct `json:"position"`
-	KillerId  int64     `json:"killer_id"`
+type LolEvent struct {
+	Timestamp int64 `json:"timestamp"`
+	Position  Pos   `json:"position"`
+	KillerId  int64 `json:"killer_id"`
 }
 
-type LolLaneEventStruct struct {
+type LolLaneEvent struct {
 	Lane string `json:"lane"`
-	LolEventStruct
+	LolEvent
 }

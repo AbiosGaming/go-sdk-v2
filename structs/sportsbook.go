@@ -1,14 +1,14 @@
 package structs
 
-// SportsbookOddsStruct is a top-level struct holding information about sportsbook odds.
-type SportsbookOddsStruct struct {
-	Sportsbook string          `json:"sportsbook"`
-	Link       string          `json:"link"`
-	Moneyline  MoneylineStruct `json:"moneyline"`
+// SportsbookOdds is a top-level struct holding information about sportsbook odds.
+type SportsbookOdds struct {
+	Sportsbook string    `json:"sportsbook"`
+	Link       string    `json:"link"`
+	Moneyline  Moneyline `json:"moneyline"`
 }
 
-// MoneylineStruct holds information about the mouneyline for a particular sportsbook.
-type MoneylineStruct struct {
+// Moneyline holds information about the mouneyline for a particular sportsbook.
+type Moneyline struct {
 	Home        float64  `json:"home"`
 	HomeBetSlip *string  `json:"home_bet_slip"`
 	Away        float64  `json:"away"`

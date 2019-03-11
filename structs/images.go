@@ -1,14 +1,14 @@
 package structs
 
-// GameImagesStruct represents the different keys for images a GameStruct can contain
-type GameImagesStruct struct {
+// GameImages represents the different keys for images a Game can contain
+type GameImages struct {
 	Square    string `json:"square,omitempty"`
 	Circle    string `json:"circle,omitempty"`
 	Rectangle string `json:"rectangle,omitempty"`
 }
 
-// TournamentImagesStruct represents the different keys for images a TournamentStruct can contain
-type TournamentImagesStruct struct {
+// TournamentImages represents the different keys for images a Tournament can contain
+type TournamentImages struct {
 	Default   string `json:"default,omitempty"`
 	Thumbnail string `json:"thumbnail,omitempty"`
 	Banner    string `json:"banner,omitempty"`
@@ -16,39 +16,39 @@ type TournamentImagesStruct struct {
 	Fallback  bool   `json:"fallback"`
 }
 
-// TeamImagesStruct represents the different keys for images a TeamStruct can contain
-type TeamImagesStruct struct {
+// TeamImages represents the different keys for images a Team can contain
+type TeamImages struct {
 	Default   string `json:"default,omitempty"`
 	Thumbnail string `json:"thumbnail,omitempty"`
 	Fallback  bool   `json:"fallback"`
 }
 
-// PlayerImagesStruct represents the different keys for images a PlayerStruct can contain
-type PlayerImagesStruct struct {
+// PlayerImages represents the different keys for images a Player can contain
+type PlayerImages struct {
 	Default   string `json:"default,omitempty"`
 	Thumbnail string `json:"thumbnail,omitempty"`
 	Fallback  bool   `json:"fallback"`
 }
 
-// RaceImagesStruct represents the different keys for images a RaceStruct can contain
-type RaceImagesStruct struct {
+// RaceImages represents the different keys for images a Race can contain
+type RaceImages struct {
 	Default   string `json:"default,omitempty"`
 	Thumbnail string `json:"thumbnail,omitempty"`
 }
 
-// StreamImagesStruct represents the different keys for images a StreamStruct can contain
-type StreamImagesStruct struct {
+// StreamImages represents the different keys for images a Stream can contain
+type StreamImages struct {
 	UserLogo string `json:"user_logo,omitempty"`
 	Preview  string `json:"preview,omitempty"`
 }
 
-// PlatformImagesStruct represents the different keys for images a PlatformStruct can contain
-type PlatformImagesStruct struct {
+// PlatformImages represents the different keys for images a Platform can contain
+type PlatformImages struct {
 	Default string `json:"default,omitempty"`
 }
 
-// CountryImagesStruct represents the different keys for images a CountryStruct can contain
-type CountryImagesStruct struct {
+// CountryImages represents the different keys for images a Country can contain
+type CountryImages struct {
 	Default   string `json:"default,omitempty"`
 	Thumbnail string `json:"thumbnail,omitempty"`
 }

@@ -1,7 +1,7 @@
 package structs
 
-// SearchResultStruct represents a result from the /search endpoint.
-type SearchResultStruct struct {
+// SearchResult represents a result from the /search endpoint.
+type SearchResult struct {
 	Id       int64   `json:"id,omitempty"`
 	Matched  string  `json:"matched,omitempty"`
 	AltLabel string  `json:"alt_label,omitempty"`

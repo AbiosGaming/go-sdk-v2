@@ -23,18 +23,15 @@ themselves see the [official documentation](https://docs.abiosgaming.com/).
 Find a bug? Missing a feature? Create an issue (or if you are feeling particularly ambitious,
 create a pull request) and we'll get to it as soon as possible!
 
-# Installation
+# Quick Start
 
-```Bash
-$ go get -u github.com/AbiosGaming/go-sdk-v2/
-```
-
-## Quick Start
 Add the import line:
 
 ```Go
-import "github.com/AbiosGaming/go-sdk-v2"
+import "github.com/AbiosGaming/go-sdk-v2/v3"
 ```
+
+and the go module system should find the package for you on your next build.
 
 Use the function `abios.New(username, password string)` to create a new instance of the
 abios struct and authenticate with the given credentials.
@@ -52,7 +49,8 @@ a.SetRate(5, 300)
 This will allow you to send 5 requests every second and up to 300 requests every minute.
 See [Outgoing Rate](#rate) for more information.
 
-To get all available games (from the /games endpoint) the following code will do:
+To get the first page of available games (from the /games endpoint) the following code
+will do:
 
 ```Go
 games, err := a.Games(nil)
@@ -101,16 +99,16 @@ outgoing rate. However, not every clock is synchronized with our server and not 
 application uses the same instance of the SDK.
 
 # <a name="errors"></a>Errors
-Errors returned from the SDK is **_not_** of type `error` but instead a pointer to a struct
-corresponding to the JSON returned from the endpoint when an error occurs. See [official documentation](https://docs.abiosgaming.com/v2/reference#errors).
 
-If no errors are returned type will be `<nil>`.
+Errors returned from the SDK are of type `error`. When an error is returned from the API
+they will be of type `structs.Error` (See [here](https://docs.abiosgaming.com/v2/reference#errors),
+otherwise they will just be forwarded as-is from the standard library.
 
-The ErrorStruct implements the `Stringer` interface.
+`structs.Error` implements the `Stringer` interface as well as the `error` interface.
 
-Errors of type `error` will be forwarded to your application in the form of an ErrorStruct.
-The `ErrorCode` will then be equal to 0 and the `Error` will specify that is is an application
-error (rather than a client or server error).
+In order to implement the `error` interface a struct cannot have the field `Error` (as
+it would clash with the interface method). Therefore, what is returned with the json key
+`"error"` is available in `structs.Error` in the field `ErrorMessage`.
 
 # Endpoints
 For each endpoint in the /v2/ API you can expect to find a corresponding method implemented
@@ -160,7 +158,7 @@ will not be exceeded. See [Concurrent Use](#concurrent_example) for an example.
 
 The SDK will try to perform as many requests as possible concurrently. It will create one
 go-routine per request per second. For example, if the specified rate limit is 10 per
-second then every second up to 10 go-routines will be created, one for each request. 
+second then every second up to 10 go-routines will be created, one for each request.
 
 # Play by Play Data
 
@@ -184,15 +182,15 @@ with a team:
 
 ```go
 // Note that for this you have to import the structs sub-package
-import . "github.com/AbiosGaming/go-sdk-v2/structs"
+import "github.com/AbiosGaming/go-sdk-v2/v3/structs"
 
 team, _ := a.MatchesById(301281, nil)
 switch pbp := team.TeamStats.PlayByPlay.(type) {
-	case DotaTeamStats:
+	case structs.DotaTeamStats:
 		// Do something
-	case LolTeamStats:
+	case structs.LolTeamStats:
 		// Do something
-	case CsTeamStats:
+	case structs.CsTeamStats:
 		// Do something
 }
 ```
@@ -216,7 +214,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AbiosGaming/go-sdk-v2"
+    "github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 func main() {
@@ -246,7 +244,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AbiosGaming/go-sdk-v2"
+    "github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 func main() {
@@ -295,7 +293,7 @@ package main
 
 import (
     "fmt"
-    "github.com/AbiosGaming/go-sdk-v2"
+    "github.com/AbiosGaming/go-sdk-v2/v3"
     "time"
 )
 
@@ -352,7 +350,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/AbiosGaming/go-sdk-v2"
+	"github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 // currentCalendar holds what we respond to our users

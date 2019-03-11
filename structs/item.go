@@ -1,6 +1,6 @@
 package structs
 
-type DotaItemStruct struct {
+type DotaItem struct {
 	Image struct {
 		Default   string `json:"default"`
 		Thumbnail string `json:"thumbnail"`
@@ -8,7 +8,7 @@ type DotaItemStruct struct {
 	Name string `json:"name"`
 }
 
-type LolItemStruct struct {
+type LolItem struct {
 	Name       string `json:"name"`
 	ExternalId int64  `json:"external_id"`
 	Image      struct {

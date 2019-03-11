@@ -50,8 +50,8 @@ type request struct {
 
 // result hold the returned data of an API request.
 type result struct {
-	statuscode int
-	body       []byte
+	body []byte
+	err  error
 }
 
 // requestHandler buffers requests and sends them out at a user-specified rate.
@@ -182,7 +182,7 @@ func (r *requestHandler) dispatcher() {
 								if r.override.override {
 									currentRequest.ch <- r.override.data
 								} else {
-									re.statuscode, re.body = performRequest(currentRequest.url, currentRequest.params)
+									_, re.body, re.err = performRequest(currentRequest.url, currentRequest.params)
 									currentRequest.ch <- re
 								}
 

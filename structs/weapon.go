@@ -1,7 +1,7 @@
 package structs
 
-// WeaponStruct holds information about a CS:GO weapon.
-type WeaponStruct struct {
+// Weapon holds information about a CS:GO weapon.
+type Weapon struct {
 	Images struct {
 		Small string `json:"small"`
 	} `json:"images"`

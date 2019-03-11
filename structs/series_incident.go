@@ -1,8 +1,8 @@
 package structs
 
-// SeriesIncidentStruct holds information about all incidents associated with a
+// SeriesIncidents holds information about all incidents associated with a
 // Series and all it's Matches.
-type SeriesIncidentsStruct struct {
-	SeriesIncidents []IncidentStruct `json:"series_incidents"`
-	MatchIncidents  []IncidentStruct `json:"match_incidents"`
+type SeriesIncidents struct {
+	SeriesIncidents []Incident `json:"series_incidents"`
+	MatchIncidents  []Incident `json:"match_incidents"`
 }

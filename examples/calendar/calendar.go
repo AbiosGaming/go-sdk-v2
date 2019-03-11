@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/AbiosGaming/go-sdk-v2"
+	"github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 // currentCalendar holds what we respond to our users
