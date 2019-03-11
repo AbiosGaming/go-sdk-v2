@@ -21,6 +21,6 @@ func (e Error) Error() (s string) {
 
 func (e Error) format() (s string) {
 	s = fmt.Sprintf("error: %v, error_code: %v, error_decription: %v",
-		e.Error, e.ErrorCode, e.ErrorDescription)
+		e.ErrorMessage, e.ErrorCode, e.ErrorDescription)
 	return s
 }
