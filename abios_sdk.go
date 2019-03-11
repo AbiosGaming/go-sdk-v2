@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	. "github.com/AbiosGaming/go-sdk-v2/v3/structs"
+	"github.com/AbiosGaming/go-sdk-v2/v3/structs"
 )
 
 // Constant variables that represents endpoints
@@ -36,23 +36,23 @@ const (
 // AbiosSdk defines the interface of an implementation of a SDK targeting the Abios endpoints.
 type AbiosSdk interface {
 	SetRate(second, minute uint)
-	Games(params Parameters) (GameStructPaginated, error)
-	Series(params Parameters) (SeriesStructPaginated, error)
-	SeriesById(id int64, params Parameters) (SeriesStruct, error)
-	MatchesById(id int64, params Parameters) (MatchStruct, error)
-	Tournaments(params Parameters) (TournamentStructPaginated, error)
-	TournamentsById(id int64, params Parameters) (TournamentStruct, error)
-	SubstagesById(id int64, params Parameters) (SubstageStruct, error)
-	Teams(params Parameters) (TeamStructPaginated, error)
-	TeamsById(id int64, params Parameters) (TeamStruct, error)
-	Organisations(params Parameters) (OrganisationStructPaginated, error)
-	OrganisationsById(id int64) (OrganisationStruct, error)
-	Players(params Parameters) (PlayerStructPaginated, error)
-	PlayersById(id int64, params Parameters) (PlayerStruct, error)
-	RostersById(id int64, params Parameters) (RosterStruct, error)
-	Search(query string, params Parameters) ([]SearchResultStruct, error)
-	Incidents(params Parameters) (IncidentStructPaginated, error)
-	IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, error)
+	Games(params Parameters) (structs.PaginatedGames, error)
+	Series(params Parameters) (structs.PaginatedSeries, error)
+	SeriesById(id int64, params Parameters) (structs.Series, error)
+	MatchesById(id int64, params Parameters) (structs.Match, error)
+	Tournaments(params Parameters) (structs.PaginatedTournaments, error)
+	TournamentsById(id int64, params Parameters) (structs.Tournament, error)
+	SubstagesById(id int64, params Parameters) (structs.Substage, error)
+	Teams(params Parameters) (structs.PaginatedTeams, error)
+	TeamsById(id int64, params Parameters) (structs.Team, error)
+	Organisations(params Parameters) (structs.PaginatedOrganisations, error)
+	OrganisationsById(id int64) (structs.Organisation, error)
+	Players(params Parameters) (structs.PaginatedPlayers, error)
+	PlayersById(id int64, params Parameters) (structs.Player, error)
+	RostersById(id int64, params Parameters) (structs.Roster, error)
+	Search(query string, params Parameters) ([]structs.SearchResult, error)
+	Incidents(params Parameters) (structs.PaginatedIncidents, error)
+	IncidentsBySeriesId(id int64) (structs.SeriesIncidents, error)
 }
 
 // client holds the oauth string returned from Authenticate as well as this sessions
@@ -60,7 +60,7 @@ type AbiosSdk interface {
 type client struct {
 	username string
 	password string
-	oauth    AccessTokenStruct
+	oauth    structs.AccessToken
 	handler  *requestHandler
 	base_url string
 }
@@ -103,7 +103,7 @@ func New(username, password string) *client {
 // NewAbios returns a new endpoint-wrapper for api version 2 with given credentials and baseUrl.
 func NewWithUrl(username, password, base_url string) *client {
 	r := newRequestHandler()
-	c := &client{username, password, AccessTokenStruct{}, r, base_url}
+	c := &client{username, password, structs.AccessToken{}, r, base_url}
 	err := c.authenticate()
 	if err != nil {
 		c.handler.override = responseOverride{override: true, data: *err}
@@ -133,7 +133,7 @@ func (a *client) authenticate() *result {
 	}
 	dec := json.NewDecoder(bytes.NewBuffer(b))
 	if 200 <= statusCode && statusCode < 300 {
-		target := AccessTokenStruct{}
+		target := structs.AccessToken{}
 		err := dec.Decode(&target)
 		if err != nil {
 			return &result{body: nil, err: err}
@@ -145,8 +145,8 @@ func (a *client) authenticate() *result {
 	return &result{body: b, err: nil}
 }
 
-// Games queries the /games endpoint and returns a GameStructPaginated.
-func (a *client) Games(params Parameters) (GameStructPaginated, error) {
+// Games queries the /games endpoint and returns a structs.PaginatedGames.
+func (a *client) Games(params Parameters) (structs.PaginatedGames, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -155,19 +155,19 @@ func (a *client) Games(params Parameters) (GameStructPaginated, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+games, params)
 	if result.err != nil {
-		return GameStructPaginated{}, result.err
+		return structs.PaginatedGames{}, result.err
 	}
 
-	target := GameStructPaginated{}
+	target := structs.PaginatedGames{}
 	err := json.Unmarshal(result.body, &target)
 	if err != nil {
-		return GameStructPaginated{}, err
+		return structs.PaginatedGames{}, err
 	}
 	return target, nil
 }
 
-// Series queries the /series endpoint and returns a SeriesStructPaginated.
-func (a *client) Series(params Parameters) (SeriesStructPaginated, error) {
+// Series queries the /series endpoint and returns a structs.PaginatedSeries.
+func (a *client) Series(params Parameters) (structs.PaginatedSeries, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -177,16 +177,16 @@ func (a *client) Series(params Parameters) (SeriesStructPaginated, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+series, params)
 	if result.err != nil {
-		return SeriesStructPaginated{}, result.err
+		return structs.PaginatedSeries{}, result.err
 	}
 
-	target := SeriesStructPaginated{}
+	target := structs.PaginatedSeries{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// SeriesById queries the /series/:id endpoint and returns a SeriesStruct.
-func (a *client) SeriesById(id int64, params Parameters) (SeriesStruct, error) {
+// SeriesById queries the /series/:id endpoint and returns a structs.Series.
+func (a *client) SeriesById(id int64, params Parameters) (structs.Series, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -197,16 +197,16 @@ func (a *client) SeriesById(id int64, params Parameters) (SeriesStruct, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+seriesById+sId, params)
 	if result.err != nil {
-		return SeriesStruct{}, result.err
+		return structs.Series{}, result.err
 	}
 
-	target := SeriesStruct{}
+	target := structs.Series{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// MatchesById queries the /matches/:id endpoint and returns a MatchStruct.
-func (a *client) MatchesById(id int64, params Parameters) (MatchStruct, error) {
+// MatchesById queries the /matches/:id endpoint and returns a structs.Match.
+func (a *client) MatchesById(id int64, params Parameters) (structs.Match, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -217,16 +217,16 @@ func (a *client) MatchesById(id int64, params Parameters) (MatchStruct, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+matches+sId, params)
 	if result.err != nil {
-		return MatchStruct{}, result.err
+		return structs.Match{}, result.err
 	}
 
-	target := MatchStruct{}
+	target := structs.Match{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// Tournaments queries the /tournaments endpoint and returns a list of TournamentStructPaginated.
-func (a *client) Tournaments(params Parameters) (TournamentStructPaginated, error) {
+// Tournaments queries the /tournaments endpoint and returns a list of structs.PaginatedTournaments.
+func (a *client) Tournaments(params Parameters) (structs.PaginatedTournaments, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -236,16 +236,16 @@ func (a *client) Tournaments(params Parameters) (TournamentStructPaginated, erro
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+tournaments, params)
 	if result.err != nil {
-		return TournamentStructPaginated{}, result.err
+		return structs.PaginatedTournaments{}, result.err
 	}
 
-	target := TournamentStructPaginated{}
+	target := structs.PaginatedTournaments{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// TournamentsById queries the /tournaments/:id endpoint and return a TournamentStruct.
-func (a *client) TournamentsById(id int64, params Parameters) (TournamentStruct, error) {
+// TournamentsById queries the /tournaments/:id endpoint and return a structs.Tournament.
+func (a *client) TournamentsById(id int64, params Parameters) (structs.Tournament, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -256,16 +256,16 @@ func (a *client) TournamentsById(id int64, params Parameters) (TournamentStruct,
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+tournamentsById+sId, params)
 	if result.err != nil {
-		return TournamentStruct{}, result.err
+		return structs.Tournament{}, result.err
 	}
 
-	target := TournamentStruct{}
+	target := structs.Tournament{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// SubstagesById queries the /substages/:id endpoint and returns a SubstageStruct.
-func (a *client) SubstagesById(id int64, params Parameters) (SubstageStruct, error) {
+// SubstagesById queries the /substages/:id endpoint and returns a structs.Substage.
+func (a *client) SubstagesById(id int64, params Parameters) (structs.Substage, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -276,16 +276,16 @@ func (a *client) SubstagesById(id int64, params Parameters) (SubstageStruct, err
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+substages+sId, params)
 	if result.err != nil {
-		return SubstageStruct{}, result.err
+		return structs.Substage{}, result.err
 	}
 
-	target := SubstageStruct{}
+	target := structs.Substage{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// Teams queries the /teams endpoint and returns a TeamsStructPaginated.
-func (a *client) Teams(params Parameters) (TeamStructPaginated, error) {
+// Teams queries the /teams endpoint and returns a structs.PaginatedTeams.
+func (a *client) Teams(params Parameters) (structs.PaginatedTeams, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -295,16 +295,16 @@ func (a *client) Teams(params Parameters) (TeamStructPaginated, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+teams, params)
 	if result.err != nil {
-		return TeamStructPaginated{}, result.err
+		return structs.PaginatedTeams{}, result.err
 	}
 
-	target := TeamStructPaginated{}
+	target := structs.PaginatedTeams{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// TeamsById queries the /teams/:id endpoint and return a TeamStruct.
-func (a *client) TeamsById(id int64, params Parameters) (TeamStruct, error) {
+// TeamsById queries the /teams/:id endpoint and return a structs.Team.
+func (a *client) TeamsById(id int64, params Parameters) (structs.Team, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -315,16 +315,16 @@ func (a *client) TeamsById(id int64, params Parameters) (TeamStruct, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+teamsById+sId, params)
 	if result.err != nil {
-		return TeamStruct{}, result.err
+		return structs.Team{}, result.err
 	}
 
-	target := TeamStruct{}
+	target := structs.Team{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
 // Organisations queries the /organisations endpoint
-func (a *client) Organisations(params Parameters) (OrganisationStructPaginated, error) {
+func (a *client) Organisations(params Parameters) (structs.PaginatedOrganisations, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -334,32 +334,32 @@ func (a *client) Organisations(params Parameters) (OrganisationStructPaginated, 
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+organisations, params)
 	if result.err != nil {
-		return OrganisationStructPaginated{}, result.err
+		return structs.PaginatedOrganisations{}, result.err
 	}
 
-	target := OrganisationStructPaginated{}
+	target := structs.PaginatedOrganisations{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
 // OrganisationsById queries the /organisations/:id endpoint
-func (a *client) OrganisationsById(id int64) (OrganisationStruct, error) {
+func (a *client) OrganisationsById(id int64) (structs.Organisation, error) {
 	sId := strconv.FormatInt(id, 10)
 	params := make(Parameters)
 
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+organisationsById+sId, params)
 	if result.err != nil {
-		return OrganisationStruct{}, result.err
+		return structs.Organisation{}, result.err
 	}
 
-	target := OrganisationStruct{}
+	target := structs.Organisation{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// Players queries the /players endpoint and returns PlayerStructPaginated.
-func (a *client) Players(params Parameters) (PlayerStructPaginated, error) {
+// Players queries the /players endpoint and returns structs.PaginatedPlayers.
+func (a *client) Players(params Parameters) (structs.PaginatedPlayers, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -369,16 +369,16 @@ func (a *client) Players(params Parameters) (PlayerStructPaginated, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+players, params)
 	if result.err != nil {
-		return PlayerStructPaginated{}, result.err
+		return structs.PaginatedPlayers{}, result.err
 	}
 
-	target := PlayerStructPaginated{}
+	target := structs.PaginatedPlayers{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// PlayersById queries the /players/:id endpoint and returns a PlayerStruct.
-func (a *client) PlayersById(id int64, params Parameters) (PlayerStruct, error) {
+// PlayersById queries the /players/:id endpoint and returns a structs.Player.
+func (a *client) PlayersById(id int64, params Parameters) (structs.Player, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -389,16 +389,16 @@ func (a *client) PlayersById(id int64, params Parameters) (PlayerStruct, error) 
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+playersById+sId, params)
 	if result.err != nil {
-		return PlayerStruct{}, result.err
+		return structs.Player{}, result.err
 	}
 
-	target := PlayerStruct{}
+	target := structs.Player{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// RostersById queries the /rosters/:id endpoint and returns a RosterStruct.
-func (a *client) RostersById(id int64, params Parameters) (RosterStruct, error) {
+// RostersById queries the /rosters/:id endpoint and returns a structs.Roster.
+func (a *client) RostersById(id int64, params Parameters) (structs.Roster, error) {
 	sId := strconv.FormatInt(id, 10)
 	if params == nil {
 		params = make(Parameters)
@@ -409,17 +409,17 @@ func (a *client) RostersById(id int64, params Parameters) (RosterStruct, error) 
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+rosters+sId, params)
 	if result.err != nil {
-		return RosterStruct{}, result.err
+		return structs.Roster{}, result.err
 	}
 
-	target := RosterStruct{}
+	target := structs.Roster{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
 // Search queries the /search endpoint with the given query and returns a list of
-// SearchResultStruct.
-func (a *client) Search(query string, params Parameters) ([]SearchResultStruct, error) {
+// structs.SearchResult.
+func (a *client) Search(query string, params Parameters) ([]structs.SearchResult, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -433,13 +433,13 @@ func (a *client) Search(query string, params Parameters) ([]SearchResultStruct, 
 		return nil, result.err
 	}
 
-	target := []SearchResultStruct{}
+	target := []structs.SearchResult{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
-// Incidents queries the /incidents endpoint and returns an IncidentStructPaginated.
-func (a *client) Incidents(params Parameters) (IncidentStructPaginated, error) {
+// Incidents queries the /incidents endpoint and returns an structs.PaginatedIncidents.
+func (a *client) Incidents(params Parameters) (structs.PaginatedIncidents, error) {
 	if params == nil {
 		params = make(Parameters)
 	} else {
@@ -449,26 +449,26 @@ func (a *client) Incidents(params Parameters) (IncidentStructPaginated, error) {
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+incidents, params)
 	if result.err != nil {
-		return IncidentStructPaginated{}, result.err
+		return structs.PaginatedIncidents{}, result.err
 	}
 
-	target := IncidentStructPaginated{}
+	target := structs.PaginatedIncidents{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }
 
 // IncidentBySeriesId queries the /incidents/:series_id endpoint and returns a
-// SeriesIncidentsStruct.
-func (a *client) IncidentsBySeriesId(id int64) (SeriesIncidentsStruct, error) {
+// structs.SeriesIncidents.
+func (a *client) IncidentsBySeriesId(id int64) (structs.SeriesIncidents, error) {
 	sId := strconv.FormatInt(id, 10)
 	params := make(Parameters)
 	params.Set("access_token", a.oauth.AccessToken)
 	result := <-a.handler.addRequest(a.base_url+incidentsBySeries+sId, params)
 	if result.err != nil {
-		return SeriesIncidentsStruct{}, result.err
+		return structs.SeriesIncidents{}, result.err
 	}
 
-	target := SeriesIncidentsStruct{}
+	target := structs.SeriesIncidents{}
 	err := json.Unmarshal(result.body, &target)
 	return target, err
 }

@@ -4,42 +4,42 @@ import (
 	"encoding/json"
 )
 
-// TeamStatsStruct holds performance statistics about a particular Team.
-type TeamStatsStruct struct {
+// TeamStats holds performance statistics about a particular Team.
+type TeamStats struct {
 	Streak struct {
 		Series struct {
-			StreakScopeStruct // defined in stats.go
+			StreakScope // defined in stats.go
 		} `json:"series,omitempty"`
 		Match struct {
-			StreakScopeStruct // defined in stats.go
+			StreakScope // defined in stats.go
 		} `json:"match,omitempty"`
 	} `json:"streak,omitempty"`
 	Winrate struct {
 		Series struct {
-			WinrateSeriesScopeStruct // defined in stats.go
+			WinrateSeriesScope // defined in stats.go
 		} `json:"series,omitempty"`
 		Match struct {
-			WinrateMatchScopeStruct // defined in stats.go
+			WinrateMatchScope // defined in stats.go
 		} `json:"match,omitempty"`
 	} `json:"winrate,omitempty"`
 	Nemesis *struct {
 		Series struct {
-			Competitor TeamStruct `json:"competitor,omitempty"` // defined in stats.go
-			Losses     int64      `json:"losses"`
+			Competitor Team  `json:"competitor,omitempty"` // defined in stats.go
+			Losses     int64 `json:"losses"`
 		} `json:"series,omitempty"`
 		Match struct {
-			Competitor TeamStruct `json:"competitor,omitempty"` // defined in stats.go
-			Losses     int64      `json:"losses"`
+			Competitor Team  `json:"competitor,omitempty"` // defined in stats.go
+			Losses     int64 `json:"losses"`
 		} `json:"match,omitempty"`
 	} `json:"nemesis,omitempty"`
 	Dominating *struct {
 		Series struct {
-			Competitor TeamStruct `json:"competitor,omitempty"` // defined in stats.go
-			Wins       int64      `json:"wins"`
+			Competitor Team  `json:"competitor,omitempty"` // defined in stats.go
+			Wins       int64 `json:"wins"`
 		} `json:"series,omitempty"`
 		Match struct {
-			Competitor TeamStruct `json:"competitor,omitempty"` // defined in stats.go
-			Wins       int64      `json:"wins"`
+			Competitor Team  `json:"competitor,omitempty"` // defined in stats.go
+			Wins       int64 `json:"wins"`
 		} `json:"match,omitempty"`
 	} `json:"dominating,omitempty"`
 	PlayByPlay TeamPlayByPlayStats `json:"play_by_play"`
@@ -47,9 +47,9 @@ type TeamStatsStruct struct {
 
 type TeamPlayByPlayStats interface{}
 
-type teamStatsStruct TeamStatsStruct
+type teamStats TeamStats
 
-func (t *TeamStatsStruct) UnmarshalJSON(data []byte) error {
+func (t *TeamStats) UnmarshalJSON(data []byte) error {
 	var partial map[string]json.RawMessage
 	if err := json.Unmarshal(data, &partial); err != nil {
 		return err
@@ -61,7 +61,7 @@ func (t *TeamStatsStruct) UnmarshalJSON(data []byte) error {
 	data, _ = json.Marshal(partial)
 
 	// Unmarshal every but the "play_by_play" key
-	var tt teamStatsStruct
+	var tt teamStats
 	if err := json.Unmarshal(data, &tt); err != nil {
 		return err
 	}
@@ -99,7 +99,7 @@ func (t *TeamStatsStruct) UnmarshalJSON(data []byte) error {
 		}
 		tt.PlayByPlay = tmp
 	}
-	*t = TeamStatsStruct(tt)
+	*t = TeamStats(tt)
 
 	return nil
 }
@@ -109,57 +109,57 @@ type CsTeamStats struct {
 	Totals struct {
 		Kills  int64 `json:"kills"`
 		Deaths int64 `json:"deaths"`
-		CsTeamCommonStatsStruct
+		CsTeamCommonStats
 	} `json:"totals"`
 	Maps []struct {
-		Map MapStruct `json:"map"`
-		CsTeamCommonStatsStruct
+		Map Map `json:"map"`
+		CsTeamCommonStats
 	} `json:"maps"`
 	Marksman []struct {
-		PlayerId int64        `json:"player_id"`
-		Adr      float64      `json:"adr"`
-		Weapon   WeaponStruct `json:"weapon"`
+		PlayerId int64   `json:"player_id"`
+		Adr      float64 `json:"adr"`
+		Weapon   Weapon  `json:"weapon"`
 	} `json:"marksman"`
 	TopStats struct {
 		Kills struct {
-			PlayerAgainstStruct
+			PlayerAgainst
 			Kills int64 `json:"kills"`
 		} `json:"kills"`
 		Adr struct {
-			PlayerAgainstStruct
+			PlayerAgainst
 			Adr float64 `json:"adr"`
 		} `json:"adr"`
 		Assists struct {
-			PlayerAgainstStruct
+			PlayerAgainst
 			Assists int64 `json:"assists"`
 		} `json:"assists"`
 		Plants struct {
-			PlayerAgainstStruct
+			PlayerAgainst
 			Plants int64 `json:"plants"`
 		} `json:"plants"`
 		Defuses struct {
-			PlayerAgainstStruct
+			PlayerAgainst
 			Defuses int64 `json:"defuses"`
 		} `json:"defuses"`
 	} `json:"top_stats"`
 	TopMatches struct {
 		BiggestLoss struct {
-			TeamAgainstStruct
+			TeamAgainst
 			Rounds int64 `json:"rounds"`
 		} `json:"biggest_loss"`
 		BiggestWin struct {
-			TeamAgainstStruct
+			TeamAgainst
 			Rounds int64 `json:"rounds"`
 		} `json:"biggest_win"`
 		MostRounds struct {
-			TeamAgainstStruct
+			TeamAgainst
 			Rounds int64 `json:"rounds"`
 		} `json:"most_rounds"`
 	} `json:"top_matches"`
 }
 
-// CsTeamCommonStatsStruct holds information common to multiple JSON objects.
-type CsTeamCommonStatsStruct struct {
+// CsTeamCommonStats holds information common to multiple JSON objects.
+type CsTeamCommonStats struct {
 	NrMatches      int64   `json:"nr_matches"`
 	CtRounds       int64   `json:"ct_rounds"`
 	CtWins         int64   `json:"ct_wins"`
@@ -185,37 +185,37 @@ type DotaTeamStats struct {
 	} `json:"faction_stats"`
 	Drafts struct {
 		Own struct {
-			MostPicked []DotaHeroWithWinsStruct `json:"most_picked"`
-			MostBanned []DotaHeroWithWinsStruct `json:"most_banned"`
+			MostPicked []DotaHeroWithWins `json:"most_picked"`
+			MostBanned []DotaHeroWithWins `json:"most_banned"`
 		} `json:"own"`
 		Opponents struct {
-			MostPicked []DotaHeroWithWinsStruct `json:"most_picked"`
-			MostBanned []DotaHeroWithWinsStruct `json:"most_banned"`
+			MostPicked []DotaHeroWithWins `json:"most_picked"`
+			MostBanned []DotaHeroWithWins `json:"most_banned"`
 		} `json:"opponents"`
 	} `json:"drafts"`
 	TopStats struct {
 		Kills struct {
-			DotaPlayerAgainstStruct
+			DotaPlayerAgainst
 			Kills int64 `json:"kills"`
 		} `json:"kills"`
 		Gpm struct {
-			DotaPlayerAgainstStruct
+			DotaPlayerAgainst
 			Gpm float64 `json:"gpm"`
 		} `json:"gpm"`
 		Xpm struct {
-			DotaPlayerAgainstStruct
+			DotaPlayerAgainst
 			Xpm float64 `json:"xpm"`
 		} `json:"xpm"`
 		DmgGiven struct {
-			DotaPlayerAgainstStruct
+			DotaPlayerAgainst
 			DmgGiven float64 `json:"dmg_given"`
 		} `json:"dmg_given"`
 		CreepKills struct {
-			DotaPlayerAgainstStruct
+			DotaPlayerAgainst
 			LastHits int64 `json:"last_hits"`
 		} `json:"creep_kills"`
 		CreepDenies struct {
-			DotaPlayerAgainstStruct
+			DotaPlayerAgainst
 			Denies int64 `json:"denies"`
 		} `json:"creep_denies"`
 	} `json:"top_stats"`
@@ -223,21 +223,21 @@ type DotaTeamStats struct {
 		AvgLength float64 `json:"avg_length"`
 		Longest   struct {
 			Won struct {
-				TeamAgainstStruct
+				TeamAgainst
 				Length int64 `json:"length"`
 			} `json:"won"`
 			Lost struct {
-				TeamAgainstStruct
+				TeamAgainst
 				Length int64 `json:"length"`
 			} `json:"lost"`
 		} `json:"longest"`
 		Shortest struct {
 			Won struct {
-				TeamAgainstStruct
+				TeamAgainst
 				Length int64 `json:"length"`
 			} `json:"won"`
 			Lost struct {
-				TeamAgainstStruct
+				TeamAgainst
 				Length int64 `json:"length"`
 			} `json:"lost"`
 		} `json:"shortest"`
@@ -245,11 +245,11 @@ type DotaTeamStats struct {
 		Kpm    struct {
 			Highest struct {
 				Kpm float64 `json:"kpm"`
-				TeamAgainstStruct
+				TeamAgainst
 			} `json:"highest"`
 			Lowest struct {
 				Kpm float64 `json:"kpm"`
-				TeamAgainstStruct
+				TeamAgainst
 			} `json:"lowest"`
 		} `json:"kpm"`
 	} `json:"top_matches"`
@@ -276,82 +276,82 @@ type LolTeamStats struct {
 		} `json:"champion"`
 	} `json:"champions"`
 	TopStats struct {
-		Kills               LolPlayerAgainstStruct  `json:"kills"`
-		Gpm                 LolPlayerAgainstStruct  `json:"gpm"`
-		Xpm                 LolPlayerAgainstStruct  `json:"xpm"`
-		DoubleKills         *LolPlayerAgainstStruct `json:"double_kills"`
-		TripleKills         *LolPlayerAgainstStruct `json:"triple_kills"`
-		QuadraKills         *LolPlayerAgainstStruct `json:"quadra_kills"`
-		PentaKills          *LolPlayerAgainstStruct `json:"Penta_kills"`
-		UnrealKills         *LolPlayerAgainstStruct `json:"Unreal_kills"`
-		LargestKillingSpree *LolPlayerAgainstStruct `json:"largest_killing_spree"`
-		LargestMultiKill    *LolPlayerAgainstStruct `json:"largest_multi_kill"`
+		Kills               LolPlayerAgainst  `json:"kills"`
+		Gpm                 LolPlayerAgainst  `json:"gpm"`
+		Xpm                 LolPlayerAgainst  `json:"xpm"`
+		DoubleKills         *LolPlayerAgainst `json:"double_kills"`
+		TripleKills         *LolPlayerAgainst `json:"triple_kills"`
+		QuadraKills         *LolPlayerAgainst `json:"quadra_kills"`
+		PentaKills          *LolPlayerAgainst `json:"Penta_kills"`
+		UnrealKills         *LolPlayerAgainst `json:"Unreal_kills"`
+		LargestKillingSpree *LolPlayerAgainst `json:"largest_killing_spree"`
+		LargestMultiKill    *LolPlayerAgainst `json:"largest_multi_kill"`
 	} `json:"top_stats"`
 	TopMatches struct {
 		Kpm struct {
 			Avg     float64 `json:"avg"` // Only lol
 			Highest struct {
-				LolTeamAgainstStruct
+				LolTeamAgainst
 			} `json:"highest"`
 			Lowest struct {
-				LolTeamAgainstStruct
+				LolTeamAgainst
 			} `json:"lowest"`
 		} `json:"kpm"`
 		Length struct {
 			Avg     float64 `json:"avg"`
 			Longest struct {
-				Won  LolTeamAgainstStruct `json:"won"`
-				Lost LolTeamAgainstStruct `json:"lost"`
+				Won  LolTeamAgainst `json:"won"`
+				Lost LolTeamAgainst `json:"lost"`
 			} `json:"longest"`
 			Shortest struct {
-				Won  LolTeamAgainstStruct `json:"won"`
-				Lost LolTeamAgainstStruct `json:"lost"`
+				Won  LolTeamAgainst `json:"won"`
+				Lost LolTeamAgainst `json:"lost"`
 			} `json:"shortest"`
 		} `json:"length"`
 	} `json:"top_matches"`
 }
 
-// TeamAgainstStruct is a collection of common data when examining specific stats.
+// TeamAgainst is a collection of common data when examining specific stats.
 // It is grouped with the specific stat in another struct.
-type TeamAgainstStruct struct {
-	MatchId int64       `json:"match_id"`
-	Against *TeamStruct `json:"against"` // Declared as pointer to avoid invalid recursive type
+type TeamAgainst struct {
+	MatchId int64 `json:"match_id"`
+	Against *Team `json:"against"` // Declared as pointer to avoid invalid recursive type
 }
 
-// DotaPlayerAgainstStruct is a grouping of PlayerAgainstStruct and a HeroStruct
-type DotaPlayerAgainstStruct struct {
-	PlayerAgainstStruct
-	Hero HeroStruct `json:"hero"`
+// DotaPlayerAgainst is a grouping of PlayerAgainst and a Hero
+type DotaPlayerAgainst struct {
+	PlayerAgainst
+	Hero Hero `json:"hero"`
 }
 
-type LolTeamAgainstStruct struct {
-	Value   float64      `json:"value"`
-	MatchId int64        `json:"match_id"`
-	Against RosterStruct `json:"against"`
+type LolTeamAgainst struct {
+	Value   float64 `json:"value"`
+	MatchId int64   `json:"match_id"`
+	Against Roster  `json:"against"`
 }
 
-type LolPlayerAgainstStruct struct {
+type LolPlayerAgainst struct {
 	Value    float64 `json:"value"`
 	PlayerId int64   `json:"player_id"`
 	MatchId  int64   `json:"match_id"`
 	Champion struct {
 		Name string `json:"name"`
 	} `json:"champion"`
-	Against RosterStruct `json:"against"`
+	Against Roster `json:"against"`
 }
 
-// PlayerAgainstStruct is a collection of common data when examining specific stats.
+// PlayerAgainst is a collection of common data when examining specific stats.
 // It is grouped with the specific stat in another struct.
-type PlayerAgainstStruct struct {
-	PlayerId int64       `json:"player_id"`
-	Against  *TeamStruct `json:"against"` // Declared as pointer to avoid invalid recursive type
-	MatchId  int64       `json:"match_id"`
+type PlayerAgainst struct {
+	PlayerId int64 `json:"player_id"`
+	Against  *Team `json:"against"` // Declared as pointer to avoid invalid recursive type
+	MatchId  int64 `json:"match_id"`
 }
 
-// DotaHeroWithAmountStruct holds information about a Dota Hero and an integer representing
+// DotaHeroWithAmount holds information about a Dota Hero and an integer representing
 // and amount (e.g amount of times picked).
-type DotaHeroWithWinsStruct struct {
-	Amount int64      `json:"amount"`
-	Wins   int64      `json:"wins"`
-	Hero   HeroStruct `json:"hero"`
+type DotaHeroWithWins struct {
+	Amount int64 `json:"amount"`
+	Wins   int64 `json:"wins"`
+	Hero   Hero  `json:"hero"`
 }

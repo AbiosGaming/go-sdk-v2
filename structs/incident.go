@@ -1,14 +1,14 @@
 package structs
 
-// IncidentStructPaginated holds a list of IncidentStruct as well as information about pages
-type IncidentStructPaginated struct {
-	LastPage    int64            `json:"last_page,omitempty"`
-	CurrentPage int64            `json:"current_page,omitempty"`
-	Data        []IncidentStruct `json:"data"`
+// PaginatedIncidents holds a list of Incident as well as information about pages
+type PaginatedIncidents struct {
+	LastPage    int64      `json:"last_page,omitempty"`
+	CurrentPage int64      `json:"current_page,omitempty"`
+	Data        []Incident `json:"data"`
 }
 
-// IncidentStruct represents an incident.
-type IncidentStruct struct {
+// Incident represents an incident.
+type Incident struct {
 	SeriesId   int64   `json:"series_id,omitempty"`
 	MatchId    *int64  `json:"match_id,omitempty"`
 	Comment    string  `json:"comment,omitempty"`

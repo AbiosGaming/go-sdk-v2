@@ -4,65 +4,65 @@ import (
 	"encoding/json"
 )
 
-// PlayerStatsStruct hold performance statistics about a particular Player.
-type PlayerStatsStruct struct {
-	SinglePlayer *SinglePlayerStatsStruct    `json:"single_player,omitempty"` // Null when player does not play single player game. Otherwise format is equal to stats for a team
-	PlayByPlay   PlayerPlayByPlayStatsStruct `json:"play_by_play"`
+// PlayerStats hold performance statistics about a particular Player.
+type PlayerStats struct {
+	SinglePlayer *SinglePlayerStats    `json:"single_player,omitempty"` // Null when player does not play single player game. Otherwise format is equal to stats for a team
+	PlayByPlay   PlayerPlayByPlayStats `json:"play_by_play"`
 }
 
-// SinglePlayerStatsStruct hold information for players playing single-player games.
+// SinglePlayerStats hold information for players playing single-player games.
 // For team games see the players corresponding Team and TeamStats.
-type SinglePlayerStatsStruct struct {
+type SinglePlayerStats struct {
 	Streak struct {
 		Series struct {
-			StreakScopeStruct // defined in stats.go
+			StreakScope // defined in stats.go
 		} `json:"series,omitempty"`
 		Match struct {
-			StreakScopeStruct // defined in stats.go
+			StreakScope // defined in stats.go
 		} `json:"match,omitempty"`
 	} `json:"streak,omitempty"`
 	Winrate struct {
 		Series struct {
-			WinrateSeriesScopeStruct // defined in stats.go
+			WinrateSeriesScope // defined in stats.go
 		} `json:"series,omitempty"`
 		Match struct {
-			WinrateMatchScopeStruct // defined in stats.go
+			WinrateMatchScope // defined in stats.go
 		} `json:"match,omitempty"`
 	} `json:"winrate,omitempty"`
 	Nemesis *struct {
 		Series struct {
-			Competitor PlayerStruct `json:"competitor,omitempty"` // defined in stats.go
-			Losses     int64        `json:"losses"`
+			Competitor Player `json:"competitor,omitempty"` // defined in stats.go
+			Losses     int64  `json:"losses"`
 		} `json:"series,omitempty"`
 		Match struct {
-			Competitor PlayerStruct `json:"competitor,omitempty"` // defined in stats.go
-			Losses     int64        `json:"losses"`
+			Competitor Player `json:"competitor,omitempty"` // defined in stats.go
+			Losses     int64  `json:"losses"`
 		} `json:"match,omitempty"`
 	} `json:"nemesis,omitempty"`
 	Dominating *struct {
 		Series struct {
-			Competitor PlayerStruct `json:"competitor,omitempty"` // defined in stats.go
-			Wins       int64        `json:"wins"`
+			Competitor Player `json:"competitor,omitempty"` // defined in stats.go
+			Wins       int64  `json:"wins"`
 		} `json:"series,omitempty"`
 		Match struct {
-			Competitor PlayerStruct `json:"competitor,omitempty"` // defined in stats.go
-			Wins       int64        `json:"wins"`
+			Competitor Player `json:"competitor,omitempty"` // defined in stats.go
+			Wins       int64  `json:"wins"`
 		} `json:"match,omitempty"`
 	} `json:"dominating,omitempty"`
 }
 
-// PlayByPlayStatsStruct holds information about play by play statistics for a certain player.
-type PlayerPlayByPlayStatsStruct interface{}
+// PlayByPlayStats holds information about play by play statistics for a certain player.
+type PlayerPlayByPlayStats interface{}
 
-type playerPlayByPlayStatsStruct PlayerPlayByPlayStatsStruct
+type playerPlayByPlayStats PlayerPlayByPlayStats
 
-func (p *PlayerStatsStruct) UnmarshalJSON(data []byte) error {
+func (p *PlayerStats) UnmarshalJSON(data []byte) error {
 	var partial map[string]json.RawMessage
 	if err := json.Unmarshal(data, &partial); err != nil {
 		return err
 	}
 
-	var single_player SinglePlayerStatsStruct
+	var single_player SinglePlayerStats
 	if err := json.Unmarshal(partial["single_player"], &single_player); err != nil {
 		return err
 	}
@@ -100,30 +100,30 @@ func (p *PlayerStatsStruct) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// CsPlayerByPlayStatsStruct holds play by play stats for cs players
+// CsPlayerByPlayStats holds play by play stats for cs players
 type CsPlayerStats struct {
 	Overall struct {
-		CsPlayerPerformanceStruct
+		CsPlayerPerformance
 		Plants  float64 `json:"plants"`
 		Defuses float64 `json:"defuses"`
 	} `json:"over_all"`
 	PerMap []struct {
-		Map    MapStruct `json:"map"`
+		Map    Map `json:"map"`
 		CtSide struct {
-			CsPlayerPerformanceStruct
+			CsPlayerPerformance
 			Defuses float64 `json:"defuses"`
 		} `json:"ct_side"`
 		TSide struct {
-			CsPlayerPerformanceStruct
+			CsPlayerPerformance
 			Plants float64 `json:"plants"`
 		} `json:"t_side"`
 		Overall struct {
-			CsPlayerPerformanceStruct
+			CsPlayerPerformance
 		} `json:"over_all"`
 	} `json:"per_map"`
 	PerWeapon []struct {
-		Weapon        WeaponStruct `json:"weapon"`
-		DmgGivenRound int64        `json:"dmg_given_round"`
+		Weapon        Weapon `json:"weapon"`
+		DmgGivenRound int64  `json:"dmg_given_round"`
 		Accuracy      struct {
 			General  float64 `json:"general"`
 			Headshot float64 `json:"head_shot"`
@@ -132,9 +132,9 @@ type CsPlayerStats struct {
 	} `json:"per_weapon"`
 }
 
-// CsPlayerPerformanceStruct holds some general data about a players performance. This
+// CsPlayerPerformance holds some general data about a players performance. This
 // struct is re-used for different levels data (e.g per_map and over_all).
-type CsPlayerPerformanceStruct struct {
+type CsPlayerPerformance struct {
 	Kills       float64 `json:"kills"`
 	Assists     float64 `json:"assists"`
 	Deaths      float64 `json:"deaths"`
@@ -147,18 +147,18 @@ type CsPlayerPerformanceStruct struct {
 	} `json:"accuracy"`
 }
 
-// DotaPlayerByPlayStatsStruct holds play by play stats for dota players
+// DotaPlayerByPlayStats holds play by play stats for dota players
 type DotaPlayerStats struct {
-	Stats     DotaPlayerPerformanceStruct `json:"stats"`
+	Stats     DotaPlayerPerformance `json:"stats"`
 	HeroStats struct {
 		Attribute struct {
-			Strength     DotaPlayerPerformanceStruct `json:"strength"`
-			Agility      DotaPlayerPerformanceStruct `json:"agility"`
-			Intelligence DotaPlayerPerformanceStruct `json:"intelligence"`
+			Strength     DotaPlayerPerformance `json:"strength"`
+			Agility      DotaPlayerPerformance `json:"agility"`
+			Intelligence DotaPlayerPerformance `json:"intelligence"`
 		} `json:"attribute"`
 		TopHeroes []struct {
-			Hero HeroStruct `json:"hero"`
-			DotaPlayerPerformanceStruct
+			Hero Hero `json:"hero"`
+			DotaPlayerPerformance
 		} `json:"top_heroes"`
 	} `json:"hero_stats"`
 	FactionStats struct {
@@ -173,9 +173,9 @@ type DotaPlayerStats struct {
 	} `json:"faction_stats"`
 }
 
-// DotaPlayerPerformanceStruct holds some data about a a players performance. This
+// DotaPlayerPerformance holds some data about a a players performance. This
 // struct is re-used for different levels of data (e.g hero_stats and top_hero)
-type DotaPlayerPerformanceStruct struct {
+type DotaPlayerPerformance struct {
 	Matches        int64   `json:"matches"`
 	Wins           int64   `json:"wins"`
 	AvgKills       float64 `json:"avg_kills"`

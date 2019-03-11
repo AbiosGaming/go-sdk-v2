@@ -101,14 +101,14 @@ application uses the same instance of the SDK.
 # <a name="errors"></a>Errors
 
 Errors returned from the SDK are of type `error`. When an error is returned from the API
-they will be of type `structs.ErrorStruct` (See [here](https://docs.abiosgaming.com/v2/reference#errors),
+they will be of type `structs.Error` (See [here](https://docs.abiosgaming.com/v2/reference#errors),
 otherwise they will just be forwarded as-is from the standard library.
 
-The ErrorStruct implements the `Stringer` interface as well as the `error` interface.
+`structs.Error` implements the `Stringer` interface as well as the `error` interface.
 
 In order to implement the `error` interface a struct cannot have the field `Error` (as
 it would clash with the interface method). Therefore, what is returned with the json key
-`"error"` is available in `ErrorStruct` in the field `ErrorMessage`.
+`"error"` is available in `structs.Error` in the field `ErrorMessage`.
 
 # Endpoints
 For each endpoint in the /v2/ API you can expect to find a corresponding method implemented
@@ -188,7 +188,7 @@ team, _ := a.MatchesById(301281, nil)
 switch pbp := team.TeamStats.PlayByPlay.(type) {
 	case structs.DotaTeamStats:
 		// Do something
-	case structs.tsLolTeamStats:
+	case structs.LolTeamStats:
 		// Do something
 	case structs.CsTeamStats:
 		// Do something

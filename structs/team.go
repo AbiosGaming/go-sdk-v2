@@ -1,25 +1,25 @@
 package structs
 
-// TeamStructPaginated holds a list of TeamStruct as well as information about pages.
-type TeamStructPaginated struct {
-	LastPage    int64        `json:"last_page,omitempty"`
-	CurrentPage int64        `json:"current_page,omitempty"`
-	Data        []TeamStruct `json:"data,omitempty"`
+// PaginatedTeams holds a list of Team as well as information about pages.
+type PaginatedTeams struct {
+	LastPage    int64  `json:"last_page,omitempty"`
+	CurrentPage int64  `json:"current_page,omitempty"`
+	Data        []Team `json:"data,omitempty"`
 }
 
-// TeamStruct represents a team that competes in Series' and Matches.
-type TeamStruct struct {
-	Id                  int64                      `json:"id,omitempty"`
-	Name                string                     `json:"name,omitempty"`
-	ShortName           string                     `json:"short_name,omitempty"`
-	DeletedAt           *string                    `json:"deleted_at"`
-	Images              TeamImagesStruct           `json:"images,omitempty"`
-	Country             *CountryStruct             `json:"country"`
-	TeamStats           TeamStatsStruct            `json:"team_stats,omitempty"`
-	Players             *[]PlayerStruct            `json:"players,omitempty"`
-	Rosters             []DefaultRosterStruct      `json:"rosters,omitempty"`
-	UpcomingSeries      []SeriesStruct             `json:"upcoming_series"`
-	RecentSeries        []SeriesStruct             `json:"recent_series"`
-	Game                GameStruct                 `json:"game,omitempty"`
-	SocialMediaAccounts []SocialMediaAccountStruct `json:"social_media_accounts,omitempty"`
+// Team represents a team that competes in Series' and Matches.
+type Team struct {
+	Id                  int64                `json:"id,omitempty"`
+	Name                string               `json:"name,omitempty"`
+	ShortName           string               `json:"short_name,omitempty"`
+	DeletedAt           *string              `json:"deleted_at"`
+	Images              TeamImages           `json:"images,omitempty"`
+	Country             *Country             `json:"country"`
+	TeamStats           TeamStats            `json:"team_stats,omitempty"`
+	Players             *[]Player            `json:"players,omitempty"`
+	Rosters             []DefaultRoster      `json:"rosters,omitempty"`
+	UpcomingSeries      []Series             `json:"upcoming_series"`
+	RecentSeries        []Series             `json:"recent_series"`
+	Game                Game                 `json:"game,omitempty"`
+	SocialMediaAccounts []SocialMediaAccount `json:"social_media_accounts,omitempty"`
 }

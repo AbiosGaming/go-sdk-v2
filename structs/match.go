@@ -4,28 +4,28 @@ import (
 	"encoding/json"
 )
 
-// MatchStruct represents an actual map being played between two rosters.
-type MatchStruct struct {
-	Id           int64                  `json:"id,omitempty"`
-	Order        int64                  `json:"order,omitempty"`
-	Winner       *int64                 `json:"winner"`
-	Map          *MapStruct             `json:"map,omitempty"`
-	DeletedAt    *string                `json:"deleted_at"`
-	Game         GameStruct             `json:"game"`
-	HasPbpStats  bool                   `json:"has_pbpstats"`
-	Scores       *ScoresStruct          `json:"scores"`
-	Forfeit      ForfeitStruct          `json:"forfeit,omitempty"`
-	Seeding      SeedingStruct          `json:"seeding,omitempty"`
-	Rosters      []RosterStruct         `json:"rosters"`
-	Performance  MatchPerformanceStruct `json:"performance,omitempty"`
-	MatchSummary MatchSummaryStruct     `json:"match_summary"` // Play by Play
+// Match represents an actual map being played between two rosters.
+type Match struct {
+	Id           int64            `json:"id,omitempty"`
+	Order        int64            `json:"order,omitempty"`
+	Winner       *int64           `json:"winner"`
+	Map          *Map             `json:"map,omitempty"`
+	DeletedAt    *string          `json:"deleted_at"`
+	Game         Game             `json:"game"`
+	HasPbpStats  bool             `json:"has_pbpstats"`
+	Scores       *Scores          `json:"scores"`
+	Forfeit      Forfeit          `json:"forfeit,omitempty"`
+	Seeding      Seeding          `json:"seeding,omitempty"`
+	Rosters      []Roster         `json:"rosters"`
+	Performance  MatchPerformance `json:"performance,omitempty"`
+	MatchSummary MatchSummary     `json:"match_summary"` // Play by Play
 }
 
 // avoid recursion when unmarshaling
-type matchStruct MatchStruct
+type match Match
 
 // We need to unmarshal match_summary into the game-specific struct
-func (m *MatchStruct) UnmarshalJSON(data []byte) error {
+func (m *Match) UnmarshalJSON(data []byte) error {
 	// find the outer-most keys
 	var partial map[string]json.RawMessage
 	if err := json.Unmarshal(data, &partial); err != nil {
@@ -37,7 +37,7 @@ func (m *MatchStruct) UnmarshalJSON(data []byte) error {
 	delete(partial, "match_summary")
 	data, _ = json.Marshal(partial)
 
-	var mm matchStruct
+	var mm match
 	if err := json.Unmarshal(data, &mm); err != nil {
 		return err
 	}
@@ -70,6 +70,6 @@ func (m *MatchStruct) UnmarshalJSON(data []byte) error {
 		}
 	}
 
-	*m = MatchStruct(mm)
+	*m = Match(mm)
 	return nil
 }

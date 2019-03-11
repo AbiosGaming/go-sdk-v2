@@ -1,6 +1,6 @@
 package structs
 
-type HeroStruct struct {
+type Hero struct {
 	Name      string `json:"name"`
 	Attribute string `json:"attribute"`
 	Images    struct {
