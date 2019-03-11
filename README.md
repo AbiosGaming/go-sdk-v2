@@ -31,6 +31,8 @@ Add the import line:
 import "github.com/AbiosGaming/go-sdk-v2/v3"
 ```
 
+and the go module system should find the package for you on your next build.
+
 Use the function `abios.New(username, password string)` to create a new instance of the
 abios struct and authenticate with the given credentials.
 
@@ -47,7 +49,8 @@ a.SetRate(5, 300)
 This will allow you to send 5 requests every second and up to 300 requests every minute.
 See [Outgoing Rate](#rate) for more information.
 
-To get all available games (from the /games endpoint) the following code will do:
+To get the first page of available games (from the /games endpoint) the following code
+will do:
 
 ```Go
 games, err := a.Games(nil)
@@ -155,7 +158,7 @@ will not be exceeded. See [Concurrent Use](#concurrent_example) for an example.
 
 The SDK will try to perform as many requests as possible concurrently. It will create one
 go-routine per request per second. For example, if the specified rate limit is 10 per
-second then every second up to 10 go-routines will be created, one for each request. 
+second then every second up to 10 go-routines will be created, one for each request.
 
 # Play by Play Data
 
