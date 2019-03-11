@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/AbiosGaming/go-sdk-v2"
+	"github.com/AbiosGaming/go-sdk-v2/v3"
 )
 
 func main() {
