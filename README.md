@@ -23,20 +23,12 @@ themselves see the [official documentation](https://docs.abiosgaming.com/).
 Find a bug? Missing a feature? Create an issue (or if you are feeling particularly ambitious,
 create a pull request) and we'll get to it as soon as possible!
 
-# Installation
-
-```Bash
-$ go get -u github.com/AbiosGaming/go-sdk-v2
-```
-
-## Quick Start
+# Quick Start
 
 Add the import line:
 
 ```Go
-import "github.com/AbiosGaming/go-sdk-v2"
-
-import "github.com/AbiosGaming/go-sdk-v2/v3" // If you are using modules
+import "github.com/AbiosGaming/go-sdk-v2/v3"
 ```
 
 Use the function `abios.New(username, password string)` to create a new instance of the
@@ -187,16 +179,15 @@ with a team:
 
 ```go
 // Note that for this you have to import the structs sub-package
-import . "github.com/AbiosGaming/go-sdk-v2/structs"
-import . "github.com/AbiosGaming/go-sdk-v2/v3/structs" // If you are using modules
+import "github.com/AbiosGaming/go-sdk-v2/v3/structs"
 
 team, _ := a.MatchesById(301281, nil)
 switch pbp := team.TeamStats.PlayByPlay.(type) {
-	case DotaTeamStats:
+	case structs.DotaTeamStats:
 		// Do something
-	case LolTeamStats:
+	case structs.tsLolTeamStats:
 		// Do something
-	case CsTeamStats:
+	case structs.CsTeamStats:
 		// Do something
 }
 ```
