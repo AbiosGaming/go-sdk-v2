@@ -97,7 +97,7 @@ application uses the same instance of the SDK.
 
 # <a name="errors"></a>Errors
 
-Errors returned from the SDK are of type `error`. When and error is returned from the API
+Errors returned from the SDK are of type `error`. When an error is returned from the API
 they will be of type `structs.ErrorStruct` (See [here](https://docs.abiosgaming.com/v2/reference#errors),
 otherwise they will just be forwarded as-is from the standard library.
 
