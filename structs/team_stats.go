@@ -269,11 +269,9 @@ type LolTeamStats struct {
 		} `json:"blue"`
 	} `json:"side_stats"`
 	Champions []struct {
-		NrMatches int64 `json:"nr_matches"`
-		NrWins    int64 `json:"nr_wins"`
-		Champion  struct {
-			Name string `json:"name"`
-		} `json:"champion"`
+		NrMatches int64    `json:"nr_matches"`
+		NrWins    int64    `json:"nr_wins"`
+		Champion  Champion `json:"champion"`
 	} `json:"champions"`
 	TopStats struct {
 		Kills               LolPlayerAgainst  `json:"kills"`
@@ -331,13 +329,11 @@ type LolTeamAgainst struct {
 }
 
 type LolPlayerAgainst struct {
-	Value    float64 `json:"value"`
-	PlayerId int64   `json:"player_id"`
-	MatchId  int64   `json:"match_id"`
-	Champion struct {
-		Name string `json:"name"`
-	} `json:"champion"`
-	Against Roster `json:"against"`
+	Value    float64  `json:"value"`
+	PlayerId int64    `json:"player_id"`
+	MatchId  int64    `json:"match_id"`
+	Champion Champion `json:"champion"`
+	Against  Roster   `json:"against"`
 }
 
 // PlayerAgainst is a collection of common data when examining specific stats.
