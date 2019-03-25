@@ -247,32 +247,26 @@ type LolMatchSummary struct {
 		RiftHeralds []LolEvent `json:"rift_heralds"`
 	} `json:"objective_events"`
 	Draft []struct {
-		RosterId int64 `json:"roster_id"`
-		Champion struct {
-			Name       string `json:"name"`
-			ExternalId int64  `json:"external_id"`
-		} `json:"champion"`
-		Order *int64 `json:"order"`
-		Type  string `json:"type"`
+		RosterId int64    `json:"roster_id"`
+		Champion Champion `json:"champion"`
+		Order    *int64   `json:"order"`
+		Type     string   `json:"type"`
 	} `json:"draft"`
 }
 
 type LolPlayer struct {
-	PlayerId   int64   `json:"player_id"`
-	Role       string  `json:"role"`
-	Lane       string  `json:"lane"`
-	Kills      int64   `json:"kills"`
-	Deaths     int64   `json:"deaths"`
-	Assists    int64   `json:"assists"`
-	GoldEarned int64   `json:"gold_earned"`
-	GoldSpent  int64   `json:"gold_spent"`
-	Gpm        float64 `json:"gpm"`
-	TotalXp    int64   `json:"total_xp"`
-	Xpm        float64 `json:"xpm"`
-	Champion   struct {
-		Name       string `json:"name"`
-		ExternalId int64  `json:"external_id"`
-	} `json:"champion"`
+	PlayerId   int64    `json:"player_id"`
+	Role       string   `json:"role"`
+	Lane       string   `json:"lane"`
+	Kills      int64    `json:"kills"`
+	Deaths     int64    `json:"deaths"`
+	Assists    int64    `json:"assists"`
+	GoldEarned int64    `json:"gold_earned"`
+	GoldSpent  int64    `json:"gold_spent"`
+	Gpm        float64  `json:"gpm"`
+	TotalXp    int64    `json:"total_xp"`
+	Xpm        float64  `json:"xpm"`
+	Champion   Champion `json:"champion"`
 	KillCombos struct {
 		Double              int64 `json:"double"`
 		Triple              int64 `json:"triple"`

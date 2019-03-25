@@ -219,16 +219,14 @@ type LolPlayerStats struct {
 		KillingSprees       int64 `json:"killing_sprees"`
 	} `json:"largest_combos"`
 	MostPlayedChampion []struct {
-		Champion struct {
-			Name string `json:"name"`
-		} `json:"champion"`
-		NrMatches  int64   `json:"nr_matches"`
-		NrWins     int64   `json:"nr_wins"`
-		AvgKills   float64 `json:"avg_kills"`
-		AvgDeaths  float64 `json:"avg_deaths"`
-		AvgAssists float64 `json:"avg_assists"`
-		AvgGpm     float64 `json:"avg_gpm"`
-		AvgXpm     float64 `json:"avg_xpm"`
+		Champion   Champion `json:"champion"`
+		NrMatches  int64    `json:"nr_matches"`
+		NrWins     int64    `json:"nr_wins"`
+		AvgKills   float64  `json:"avg_kills"`
+		AvgDeaths  float64  `json:"avg_deaths"`
+		AvgAssists float64  `json:"avg_assists"`
+		AvgGpm     float64  `json:"avg_gpm"`
+		AvgXpm     float64  `json:"avg_xpm"`
 	} `json:"most_played_champions"`
 	SideStats struct {
 		Purple struct {
