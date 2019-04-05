@@ -253,6 +253,52 @@ type DotaTeamStats struct {
 			} `json:"lowest"`
 		} `json:"kpm"`
 	} `json:"top_matches"`
+	Average struct {
+		Match struct {
+			Kills   *float64 `json:"kills"`
+			Deaths  *float64 `json:"deaths"`
+			Assists *float64 `json:"assists"`
+			Gpm     *float64 `json:"gpm"`
+			Xpm     *float64 `json:"xpm"`
+			Length  *float64 `json:"length"`
+			Wards   struct {
+				Observers struct {
+					Killed *float64 `json:"killed"`
+					Placed *float64 `json:"placed"`
+				} `json:"observers"`
+				Sentries struct {
+					Killed *float64 `json:"killed"`
+					Placed *float64 `json:"placed"`
+				} `json:"sentries"`
+			} `json:"wards"`
+			Structures struct {
+				Towers struct {
+					Taken  *float64 `json:"taken"`
+					Lost   *float64 `json:"lost"`
+					Denied *float64 `json:"denied"`
+				} `json:"towers"`
+				Barracks struct {
+					Taken  *float64 `json:"taken"`
+					Lost   *float64 `json:"lost"`
+					Denied *float64 `json:"denied"`
+				} `json:"barracks"`
+			} `json:"structures"`
+			Creeps struct {
+				Lane struct {
+					Kills  *float64 `json:"kills"`
+					Denies *float64 `json:"denies"`
+				} `json:"lane"`
+				Neutral struct {
+					Roshan *float64 `json:"roshan"`
+					Total  *float64 `json:"total"`
+				} `json:"neutral"`
+			} `json:"creeps"`
+			FirstBlood struct {
+				Rate    *float64 `json:"rate"`
+				TakenAt *float64 `json:"taken_at"`
+			} `json:"first_blood"`
+		} `json:"match"`
+	} `json:"average"`
 }
 
 type LolTeamStats struct {
@@ -268,6 +314,44 @@ type LolTeamStats struct {
 			NrWins    int64 `json:"nr_wins"`
 		} `json:"blue"`
 	} `json:"side_stats"`
+	Average struct {
+		Match struct {
+			Kills   *float64 `json:"kills"`
+			Deaths  *float64 `json:"deaths"`
+			Assists *float64 `json:"assists"`
+			Gpm     *float64 `json:"gpm"`
+			Length  *float64 `json:"length"`
+			Wards   struct {
+				Killed *float64 `json:"killed"`
+				Placed *float64 `json:"placed"`
+			} `json:"wards"`
+			Structures struct {
+				Turrets struct {
+					Taken *float64 `json:"taken"`
+					Lost  *float64 `json:"lost"`
+				} `json:"turrets"`
+				Inhibitors struct {
+					Taken *float64 `json:"taken"`
+					Lost  *float64 `json:"lost"`
+				} `json:"inhibitors"`
+			} `json:"structures"`
+			Creeps struct {
+				Lane struct {
+					Kills *float64 `json:"kills"`
+				} `json:"lane"`
+				Neutral struct {
+					Baron   *float64 `json:"baron"`
+					Dragon  *float64 `json:"dragon"`
+					Heralds *float64 `json:"heralds"`
+					Total   *float64 `json:"total"`
+				} `json:"neutral"`
+			} `json:"creeps"`
+			FirstBlood struct {
+				Rate    *float64 `json:"rate"`
+				TakenAt *float64 `json:"taken_at"`
+			} `json:"first_blood"`
+		} `json:"match"`
+	} `json:"average"`
 	Champions []struct {
 		NrMatches int64    `json:"nr_matches"`
 		NrWins    int64    `json:"nr_wins"`
