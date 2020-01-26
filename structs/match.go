@@ -7,6 +7,7 @@ import (
 // Match represents an actual map being played between two rosters.
 type Match struct {
 	Id           int64            `json:"id,omitempty"`
+	SeriesId     int64            `json:"series_id,omitmepty"`
 	Order        int64            `json:"order,omitempty"`
 	Winner       *int64           `json:"winner"`
 	Map          *Map             `json:"map,omitempty"`
