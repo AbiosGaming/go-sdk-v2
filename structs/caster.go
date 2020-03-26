@@ -6,7 +6,7 @@ type Caster struct {
 	Name    string  `json:"name,omitempty"`
 	Type    *int64  `json:"type,omitempty"`
 	Url     string  `json:"url,omitempty"`
-	Primary bool    `json:"primary,omitmepty"`
+	Primary bool    `json:"primary,omitempty"`
 	Stream  *Stream `json:"stream,omitempty"`
 	Country Country `json:"country,omitempty"`
 }
