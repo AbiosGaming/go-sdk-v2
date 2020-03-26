@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/AbiosGaming/go-sdk-v2/v3/structs"
@@ -95,13 +96,18 @@ func (a *client) authenticator() {
 	}
 }
 
-// NewAbios returns a new endpoint-wrapper for api version 2 with given credentials.
+// New returns a new endpoint-wrapper for api version 2 with given credentials using the default url.
 func New(username, password string) *client {
 	return NewWithUrl(username, password, baseUrl)
 }
 
-// NewAbios returns a new endpoint-wrapper for api version 2 with given credentials and baseUrl.
+// NewWithUrl returns a new endpoint-wrapper for api version 2 with given credentials and base_url.
+// Will append "/" to base_url if missing.
 func NewWithUrl(username, password, base_url string) *client {
+	if !strings.HasSuffix(base_url, "/") {
+		base_url += "/"
+	}
+
 	r := newRequestHandler()
 	c := &client{username, password, structs.AccessToken{}, r, base_url}
 	err := c.authenticate()
@@ -124,7 +130,10 @@ func (a *client) SetRate(second, minute uint) {
 func (a *client) authenticate() *result {
 	var payload = []byte(`grant_type=client_credentials&client_id=` + a.username + `&client_secret=` + a.password)
 
-	req, _ := http.NewRequest("POST", a.base_url+access_token, bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST", a.base_url+access_token, bytes.NewBuffer(payload))
+	if err != nil {
+		return &result{body: nil, err: err}
+	}
 	req.Header = http.Header{"Content-Type": {"application/x-www-form-urlencoded"}}
 
 	statusCode, b, err := apiCall(req)

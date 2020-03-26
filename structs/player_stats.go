@@ -54,8 +54,6 @@ type SinglePlayerStats struct {
 // PlayByPlayStats holds information about play by play statistics for a certain player.
 type PlayerPlayByPlayStats interface{}
 
-type playerPlayByPlayStats PlayerPlayByPlayStats
-
 func (p *PlayerStats) UnmarshalJSON(data []byte) error {
 	var partial map[string]json.RawMessage
 	if err := json.Unmarshal(data, &partial); err != nil {

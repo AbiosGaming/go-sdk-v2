@@ -98,11 +98,11 @@ type DotaMatchSummary struct {
 		AtTime  int64   `json:"at_time"`
 		Assists []int64 `json:"assists"`
 	} `json:"kills"`
-	ureDest []struct {
-		Killer  int64  `json:"killer"`
-		ureType string `json:"structure_type"`
-		urePos  string `json:"structure_pos"`
-		AtTime  int64  `json:"at_time"`
+	StructureureDest []struct {
+		Killer           int64  `json:"killer"`
+		StructureureType string `json:"structure_type"`
+		StructureurePos  string `json:"structure_pos"`
+		AtTime           int64  `json:"at_time"`
 	} `json:"structure_dest"`
 	PlayerStats []struct {
 		PlayerId    int64            `json:"player_id"`
