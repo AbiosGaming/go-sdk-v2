@@ -34,7 +34,7 @@ func performRequest(targetUrl string, params Parameters) (int, []byte, error) {
 
 // apiCall performs the actual http request and returns the resulting statuscode and body.
 func apiCall(req *http.Request) (int, []byte, error) {
-	client := &http.Client{Timeout: 20 * time.Second}
+	client := &http.Client{Timeout: 55 * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
 		return 0, nil, err
