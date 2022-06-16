@@ -1,4 +1,4 @@
-Abios SDK
+Abios SDK [deprecated, end of life @ 20220921]
 =========
 
 Abios SDK is meant to provide a thin wrapper around http requests and unmarshal
